@@ -1,5 +1,5 @@
 # Krudo
-A PHP application for your contact management written in pure PHP.
+A basic PHP framework application for your product management written in pure PHP OOP.
 - PHP 8
 - Made with fun and love
 - version 0.2
