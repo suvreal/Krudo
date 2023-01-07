@@ -84,16 +84,16 @@ Class Model{
 
         // TODO: create and save instance as key value pair according to given model $instance = array(IDRecordOFModelClass => actuall model class instance of given ID)
         if(!is_null($IDModel) && ($IDModel > 0)){
+            var_export(($calledClass->name)::$Instance);
+            die;
             if (array_key_exists($IDModel, ($calledClass->name)::$Instance)){
                 return ($calledClass->name)::$Instance[$IDModel];
             }else{
                 if(($results = self::getInstance()->obtainSingleRecordByIDByModel($IDModel))){
-                    $results["ID"];                   
+                    return $results["ID"];     // TODO: fill the object properties and save it to eky value pair for model $instance which have to be saved in session              
                 }else{
                     return null;
                 }
-
-                die;
 
                 // TODO: obtain it from database records to create new
                 return ($calledClass->name)::getInstance();
@@ -135,6 +135,34 @@ Class Model{
         }
         return null;
 
+    }
+
+    /**
+     * Set ID of desired object
+     * 
+     * @param int $recordID
+     * @return Model|null
+     */
+    public function setId(int $recordID)
+    {
+        if($this instanceof \models\Model){
+           return $this->ModelData->ID = $recordID;
+        }
+        return null;
+    }
+
+    /**
+     * Get ID of desired object
+     * 
+     * @param int $recordID
+     * @return Model|null
+     */
+    public function getId()
+    {
+        if($this instanceof \models\Model){
+            return $this->ModelData->ID;
+        }
+        return null;
     }
 
     /**
@@ -199,6 +227,14 @@ Class Model{
     }
 
     /**
+     * Performs delete of record
+     */
+    public function Delete()
+    {
+        // TODO: after successful deletion destroy object of concrete model
+    }
+
+    /**
     * Insert into DB by model instance & data set
     *
     * @param $data as data values to be saved
@@ -208,26 +244,34 @@ Class Model{
     {
       
         $data = (array) $this->getAttributeValues();
-        unset($data["ID"]);
+        if($this instanceof \models\Model){
+            if($this->getId() == 0){
+                unset($data["ID"]);
+                $queryPrefix = "INSERT INTO";
+            }
+            if($this->getId() > 0){
+                $queryPrefix = "REPLACE INTO";
+            }       
+        }
       
         $arrayKeys = implode(",", array_keys($data));      
-
         if(is_null($bindCharacters = self::getModelBindCharacters(count($data)))){
             return null;
         }
-
         if(is_null($bindParams = self::getModelBindParams())){
             return null;
         }
         if(is_null($table = self::getModelTableName())){
             return null;
         }
-   
-        $connectionStatement = $this->Connection->prepare("INSERT INTO {$table} ({$arrayKeys}) VALUES ({$bindCharacters})");
-        $connectionStatement->bind_param($bindParams, ...array_values($data));
 
+        $connectionStatement = $this->Connection->prepare("{$queryPrefix} {$table} ({$arrayKeys}) VALUES ({$bindCharacters})");
+        $connectionStatement->bind_param($bindParams, ...array_values($data));
+        
         try{
-            return $connectionStatement->execute();
+            $connectionStatement->execute();
+            $this->setId($connectionStatement->insert_id);
+            return $connectionStatement;
         }catch(\Exception $e){
             echo("Database operation problem:". $e->getMessage());
         }

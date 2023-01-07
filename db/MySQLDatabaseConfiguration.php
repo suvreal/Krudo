@@ -2,6 +2,8 @@
 
 namespace db;
 
+include("../appConfiguration.php");
+
 /**
  * Database configuration static class
  */
@@ -12,12 +14,12 @@ Class MySQLDatabaseConfiguration {
      * 
      * @var $DatabaseConfiguration
      */
-    public static $DatabaseConfiguration = array( 
-        'DatabaseName' => 'krudo',
-        'User' => 'root',
-        'Pass' => '123321',
-        'Port' => '3309',
-        'Address' => '127.0.0.1'
+    public static $DatabaseConfiguration = array(
+        'DatabaseName' => constant("APP_DB_NAME"),
+        'User' => constant("APP_DB_USER"),
+        'Pass' => constant("APP_DB_PASSWORD"),
+        'Port' => constant("APP_DB_PORT"),
+        'Address' => constant("APP_DB_ADDRESS")
     );
 
     /**

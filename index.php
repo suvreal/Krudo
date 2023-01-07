@@ -1,15 +1,29 @@
 <?php
 
-use db\MySQLConnection;
-use db\MySQLDatabaseConfiguration;
+/*****************/
+/*App preparation*/
+/*****************/
+session_start();
 
-/*************************/
-/*Autoloading and Routing*/
-/*************************/
-
+/*************/
+/*Autoloading*/
+/*************/
 spl_autoload_register(function ($class_name) {
     include $class_name . '.php';
 });
+
+/*********/
+/*Routing*/
+/*********/
+// include("appConfiguration.php");
+// constant("APP_ROOT");
+// TODO: process request and path according to root folder path which is expected as krudo
+
+
+/************/
+/*Run & test*/
+/************/
+
 
 // $conn = MySQLConnection::getInstance();
 // $conn::performDatabaseConnection();
@@ -31,7 +45,7 @@ spl_autoload_register(function ($class_name) {
 // echo("<br/>");
 // echo($model->getAttributeValue("Price"));
 // $model->InsertRecords();
-
+// $model->getId();
 
 //var_export(\models\Product::prepareConnection());
 
