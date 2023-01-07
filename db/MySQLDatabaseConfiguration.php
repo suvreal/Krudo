@@ -2,8 +2,6 @@
 
 namespace db;
 
-include("../appConfiguration.php");
-
 /**
  * Database configuration static class
  */
@@ -14,13 +12,7 @@ Class MySQLDatabaseConfiguration {
      * 
      * @var $DatabaseConfiguration
      */
-    public static $DatabaseConfiguration = array(
-        'DatabaseName' => constant("APP_DB_NAME"),
-        'User' => constant("APP_DB_USER"),
-        'Pass' => constant("APP_DB_PASSWORD"),
-        'Port' => constant("APP_DB_PORT"),
-        'Address' => constant("APP_DB_ADDRESS")
-    );
+    public static $DatabaseConfiguration;
 
     /**
      * Provides database configuration data as static property
@@ -28,7 +20,13 @@ Class MySQLDatabaseConfiguration {
      * @return array $DatabaseConfiguration
      */
     public static function getDatabaseConfiguration(){
-        return static::$DatabaseConfiguration;
+        return static::$DatabaseConfiguration = array(
+            'DatabaseName' => constant("APP_DB_NAME"),
+            'User' => constant("APP_DB_USER"),
+            'Pass' => constant("APP_DB_PASSWORD"),
+            'Port' => constant("APP_DB_PORT"),
+            'Address' => constant("APP_DB_ADDRESS")
+        );
     }
 
 }
