@@ -32,12 +32,12 @@ A basic PHP framework application for your product management written in pure PH
 
 
 ## Usage:
-1. Have PHP 8.0 environment prepared with MySQL
+Generally there is important to clone and paste root of app into adequate folder, import database and run webserver for this app. More steps below.
+1. Have PHP 8.0 environment prepared with MySQL 8.0
 2. Clone this repository
 3. Import database structure included
 4. Paste root of this repository into running webserver
-5. Perform installation to set user and DB access on URL path "/start"
-6. Application is ready to use - perform login to manage products
+5. Application is ready to use - perform login to manage products
 
 ## Further work:
 1. Other FSOP features: filter-ing, improved search-ing, order-ing, page-inating 
