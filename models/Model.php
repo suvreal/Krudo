@@ -56,16 +56,6 @@ Class Model{
     }
 
     /**
-     * Get all instances of given model class according to call
-     * 
-     * @return array $instances
-     */
-    public static function initializeInstances(){
-        $_SESSION["ModelInstances"] = array();
-        array_push($_SESSION["ModelInstances"], "apple", "raspberry");
-    }
-
-    /**
      * Singleton instance obtain
      * 
      * @param int $IDModel
@@ -86,14 +76,14 @@ Class Model{
             if (array_key_exists($IDModel, ($calledClass->name)::$Instances)){
                 return ($calledClass->name)::$Instance[$IDModel];
             }else{
-                if(($results = self::getInstance()->obtainSingleRecordByIDByModel($IDModel))){
+                if(($results = (self::getInstance())::obtainSingleRecordByIDByModel($IDModel))){ // TODO: add static method here to obtain single record this is weird
                     $className = $calledClass->name;
                     $aModelInstance = new $className;
                     $aModelInstance->ModelData = new stdClass();
                     $aModelInstance->ModelData->ID = $results["ID"]; 
                     self::setAttributeKeys($aModelInstance);
                     $aModelInstance->setAttributeValues($results);
-                    array_push($aModelInstance::$Instances, array($aModelInstance->ModelData->ID => $aModelInstance));
+                    $aModelInstance::$Instances[$aModelInstance->ModelData->ID] = $aModelInstance;
                 }else{
                     return null;
                 }
@@ -125,34 +115,6 @@ Class Model{
                 $modelInstance->ModelData->{$propertyKey} = "";
             }
         }
-    }
-
-    /**
-     * Set ID of desired object
-     * 
-     * @param int $recordID
-     * @return Model|null
-     */
-    public function setId(int $recordID)
-    {
-        if($this instanceof \models\Model){
-           return $this->ModelData->ID = $recordID;
-        }
-        return null;
-    }
-
-    /**
-     * Get ID of desired object
-     * 
-     * @param int $recordID
-     * @return Model|null
-     */
-    public function getId()
-    {
-        if($this instanceof \models\Model){
-            return $this->ModelData->ID;
-        }
-        return null;
     }
 
     /**
@@ -234,12 +196,68 @@ Class Model{
     }
     
     /**
+     * Obtain database single record by ID and model class
+     *
+     * @param int $ID as data values to be saved
+     * @return null|array
+     */
+    public static function ObtainSingleRecordByIDByModel(int $ID)
+    {
+        if(is_null($table = self::getModelTableName())){
+            return null;
+        }
+        try{
+            $connection = self::prepareConnection();
+            $statement = $connection->prepare("SELECT * FROM {$table} WHERE ID = ? LIMIT 1");
+            $statement->bind_param('i', $ID);
+            $statement->execute();
+            $result = $statement->get_result();
+            $result = $result->fetch_array(MYSQLI_ASSOC);   
+        }catch(\Exception $e){
+            echo("Database operation problem:". $e->getMessage());
+        }
+        return $result;
+    }
+
+    // TODO: this should be prepared even though as single value
+    /**
+     * Obtain database single record by where query
+     *
+     * @param string $whereQuery
+     * @return null|array
+     */
+    public static function ObtainSingleRecordByIDByModelByQuery(string $whereQuery)
+    {  
+        if(is_null($table = self::getModelTableName())){
+            return null;
+        }
+        if($whereQuery != ""){
+            $whereQuery = "WHERE ".$whereQuery;
+        }
+        try{
+            $connection = self::prepareConnection();
+
+            $result = $connection->query("SELECT * FROM {$table} {$whereQuery} LIMIT 1");
+            if($result->num_rows == 0){
+                return null;
+            }
+
+            $result = $connection->get_result();
+            $result = $result->fetch_array(MYSQLI_ASSOC);   
+        }catch(\Exception $e){
+            echo("Database operation problem:". $e->getMessage());
+        }
+        return $result;
+    }
+    
+    /**
      * Obtain database records according to model class and where string
      * 
      * @param string $postWhereQuery query to proceed
+     * @param bool $returnObjects query to proceed
      * @return null|array
      */
-    public static function ObtainAllRecordsByModel(string $postWhereQuery = "")
+    public static function ObtainAllRecordsByModel(string $postWhereQuery = "", bool $returnObjects = null)
     {
         if(is_null($table = self::getModelTableName())){
             return null;
@@ -253,7 +271,12 @@ Class Model{
             $resultArray = array();
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
-                    $resultArray[] = $row;
+                    if(($returnObjects == TRUE)){
+                        $resultArray[] = self::getInstance(intval($row["ID"]));
+                    }else{
+                        $resultArray[] = $row;
+                    }
+                    
                 }
                 $result = $resultArray;
             }else{
@@ -283,6 +306,16 @@ Class Model{
     }
 
     /**
+     * Removes instance of deleted record or non-existent record in database
+     * 
+     * @return void
+     */
+    public function removeInstance()
+    {  
+        unset(self::$Instances[$this->getId()]);
+    }
+
+    /**
      * Get attribute values of called class
      * 
      * @param array $recordModelData
@@ -293,6 +326,34 @@ Class Model{
         if($this instanceof \models\Model){
             return $this->ModelData;
         }
+    }
+
+    /**
+     * Set ID of desired object
+     * 
+     * @param int $recordID
+     * @return Model|null
+     */
+    public function setId(int $recordID)
+    {
+        if($this instanceof \models\Model){
+           return $this->ModelData->ID = $recordID;
+        }
+        return null;
+    }
+
+    /**
+     * Get ID of desired object
+     * 
+     * @param int $recordID
+     * @return Model|null
+     */
+    public function getId()
+    {
+        if($this instanceof \models\Model){
+            return $this->ModelData->ID;
+        }
+        return null;
     }
 
     /**
@@ -307,10 +368,25 @@ Class Model{
         if(class_exists($calledClass->name)){
             foreach(array_keys($calledClass->getStaticProperties()) as $propertyKey){
                 if(array_key_exists($propertyKey, $attributeDataToSave)){
-                    if($this instanceof \models\Model){
-                        $this->ModelData->{$propertyKey} = $attributeDataToSave[$propertyKey];
-                    }
+                    $this->ModelData->{$propertyKey} = $attributeDataToSave[$propertyKey];
                 }
+            }
+        }
+    }
+
+    /**
+     * Set attribute property keys for created model object
+     * 
+     * @param string $attributeKey
+     * @param string $attributeValue
+     * @return Model $ModelData
+     */
+    public function setAttributeValue(string $attributeKey, string $attributeValue)
+    {
+        $calledClass = new \ReflectionClass(get_called_class());
+        if(class_exists($calledClass->name)){
+            if(property_exists($this, $attributeKey)){
+                $this->ModelData->{$attributeKey} = $attributeValue;
             }
         }
     }
@@ -332,16 +408,19 @@ Class Model{
 
     /**
     * Insert into DB by model instance & data set
+    * One array set at the time
     *
     * @param $data as data values to be saved
     * @return null|true
     */
-    public function InsertRecords()
+    public function SaveRecords()
     {
         $data = (array) $this->getAttributeValues();
         if($this instanceof \models\Model){
+            $newRecord = NULL;
             if($this->getId() == 0){
                 unset($data["ID"]);
+                $newRecord = TRUE;
                 $queryPrefix = "INSERT INTO";
             }
             if($this->getId() > 0){
@@ -369,7 +448,10 @@ Class Model{
         
         try{
             $connectionStatement->execute();
-            $this->setId($connectionStatement->insert_id);
+            if($newRecord == TRUE){
+                $this->setId($connectionStatement->insert_id);
+                $this::$Instances[$connectionStatement->insert_id] = $this;
+            }
             return $connectionStatement;
         }catch(\Exception $e){
             echo("Database operation problem:". $e->getMessage());
@@ -388,66 +470,11 @@ Class Model{
         }
         try{
             $result = $this->Connection->query("DELETE FROM {$table} WHERE ID = {$this->getId()}");
+            $this->removeInstance();
         }catch(\Exception $e){
             echo("Database operation problem:". $e->getMessage());
         }
         return $result;
-    }
-
-    /**
-     * Obtain database single record by ID and model class
-     *
-     * @param int $ID as data values to be saved
-     * @return null|array
-     */
-    public function ObtainSingleRecordByIDByModel(int $ID)
-    {  
-        if(is_null($table = self::getModelTableName())){
-            return null;
-        }
-        try{
-            $statement = $this->Connection->prepare("SELECT * FROM {$table} WHERE ID = ?");
-            $statement->bind_param('i', $ID);
-            $statement->execute();
-            $result = $statement->get_result();
-            $result = $result->fetch_array(MYSQLI_ASSOC);   
-        }catch(\Exception $e){
-            echo("Database operation problem:". $e->getMessage());
-        }
-        return $result;
-    }
-
-    // TODO: old - supposed to be filled with same or deleted
-    /**
-    * Insert into DB by model with data as param
-    *
-    * @param $data as data values to be saved
-    * @return null|true
-    */
-    public function InsertRecordsByModel(array $data)
-    {
-        $arrayKeys = implode(",", array_keys($data));        
-
-        if(is_null($bindCharacters = self::getModelBindCharacters(count($data)))){
-            return null;
-        }
-
-        if(is_null($bindParams = self::getModelBindParams())){
-            return null;
-        }
-        if(is_null($table = self::getModelTableName())){
-            return null;
-        }
-   
-        $connectionStatement = $this->Connection->prepare("INSERT INTO {$table} ({$arrayKeys}) VALUES ({$bindCharacters})");
-        $connectionStatement->bind_param($bindParams, ...array_values($data));
-
-        try{
-            return $connectionStatement->execute();
-        }catch(\Exception $e){
-            echo("Database operation problem:". $e->getMessage());
-        }
-                
     }
 
 }

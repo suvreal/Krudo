@@ -3,7 +3,7 @@
 namespace models;
 
 /**
- * Product model object definition
+ * Product model class
  */
 Class Product extends Model{
 
@@ -47,5 +47,4 @@ Class Product extends Model{
      */
     static $Price = 'd';
    
-
 }

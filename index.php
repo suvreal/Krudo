@@ -3,6 +3,7 @@
 /*****************/
 /*App preparation*/
 /*****************/
+error_reporting(E_ALL);
 session_start();
 require("appConfiguration.php");
 
@@ -45,7 +46,7 @@ spl_autoload_register(function ($class_name) {
 // echo("</pre>");
 // echo("<br/>");
 // echo($model->getAttributeValue("Price"));
-// $model->InsertRecords();
+// $model->SaveRecords();
 // $model->getId();
 
 //var_export(\models\Product::prepareConnection());
@@ -69,7 +70,7 @@ spl_autoload_register(function ($class_name) {
 // $testModelInstance2->setAttributeValues($dataToSave);
 // echo($testModelInstance2->getId());
 // echo("<br>");
-// var_export(($testModelInstance2->InsertRecords())->get_result());
+// var_export(($testModelInstance2->SaveRecords())->get_result());
 
 // echo("<pre>");
 // var_export($testModelInstance2);
@@ -87,8 +88,33 @@ spl_autoload_register(function ($class_name) {
 /*MODEL QUERY SINGLE TEST END*/
 
 /*MODEL INSTANCE DELETION START*/
-// $modelTest = models\Product::getInstance(3);
-// var_export($modelTest->DeleteRecord());
+// $testModel4 = models\Product::getInstance(8);
+// $model = models\Product::getInstance(); 
+// $dataToSave = array(
+//     "Title" => "Test product 6",
+//     "Description" => "test product 6",
+//     "ShortDescription" => "prod 6",
+//     "DiscountPrice" => 850,
+//     "Price" => 700,
+// );
+// // $testModel4->DeleteRecord();
+// $model->setAttributeValues($dataToSave);
+// $model->SaveRecords();
+// echo($model->getId());
+
+// echo($model->getId());
+// $model = models\Product::getInstance(8);
+// echo("<pre>");
+// var_export($model->DeleteRecord());
+// echo("</pre>");
+// echo("<pre>");
+// var_export($model->removeInstance());
+// echo("</pre>");
+
+// echo("<pre>");
+// var_export(models\Product::getAllInstances());
+// echo("</pre>");
+
 /*MODEL INSTANCE DELETETION END*/
 
 /*SESSION INSTANCES TEST START*/
@@ -147,4 +173,49 @@ spl_autoload_register(function ($class_name) {
 // echo("</pre>");
 /*SESSION INSTANCES TEST END*/
 
-// TODO: add method to get all records as instances of given model class not just records - use already existing methods to rework
+
+
+/*MULTIPLE DIFFERENT INSTANCES - START*/
+// $testUser = models\User::getInstance(1);
+// $testProduct = models\Product::getInstance(9);
+// echo("<pre>");
+// var_export(models\Model::getAllInstances());
+// echo("</pre>");
+/*MULTIPLE DIFFERENT INSTANCES - END*/
+
+
+
+/*authentication - START*/
+// echo("<pre>");
+// $userModelInstance = models\User::getInstance();
+// $userModelInstance->setAttributeValues(
+//     array(
+//         "Name" => "Asd User",
+//         "Email" => "asd@asd.asd",
+//         "Phone" => "987987987",
+//         "Password" => "6546544fdasdf",
+//         "DateCreated" => date('Y-m-d H:i:s'),
+//         "UserType" => "created",
+//         "Active" => 0,
+//     )
+// );
+// var_export($userModelInstance->setAttributeValue("Email", "asdasd@test.test"));
+// var_export($userModelInstance->SaveRecords());
+// var_export($userModelInstance->getAttributeValues());
+// echo("</pre>");
+
+$userModelInstance = models\User::getInstance(2);
+// echo(password_verify('6546544fdasdf', $userModelInstance->ModelData->Password));
+var_export($userModelInstance->Authenticate($userModelInstance->getAttributeValue("Email"), "6546544fdasdf"));
+
+
+/*authentication - END*/
+
+
+// TODO: test search for products
+// TODO: create URL identification
+// TODO: call static page or instance of model (Product and app settings)
+// TODO: complet return page with templates: header, content, footer
+// TODO: content of tempate structure might be extra content with CSS or just controller (identify it in controller class with static property $templateType with values "controller" or "template")
+// TODO: create FE components: forms - C&D, 
+
