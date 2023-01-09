@@ -62,15 +62,15 @@ Class User extends Model{
     static $Active = 'i';
 
     /**
-     * SaveRecords method check for validity, duplicities and password
+     * SaveRecord method check for validity, duplicities and password
      * 
      * @return bool|null
      */
-    public function SaveRecords()
+    public function SaveRecord()
     {
         $data = (array) $this->getAttributeValues();
         if(isset($data["Email"]) && mb_strlen($data["Email"]) > 0){
-            if(!is_null(self::ObtainSingleRecordByIDByModelByQuery("Email = '{$data["Email"]}'"))){
+            if(!is_null(self::BuildQueryByModel("*", "LIMIT 1", "Email = ?", array($data["Email"] => "s")))){ 
                 throw new \Exception("User already exists");
             }
         }
@@ -82,7 +82,7 @@ Class User extends Model{
         }else{
             throw new \Exception("Password attribute is empty");
         }
-        return parent::SaveRecords();
+        return parent::SaveRecord();
     }
 
     /**
@@ -90,21 +90,51 @@ Class User extends Model{
      * 
      * @param string $email
      * @param string $password
-     * @return string|null
+     * @return bool|null
      */
-    public function Authenticate(string $email, string $password)
+    public function AuthenticateCheck(string $email, string $password)
     {
         if(mb_strlen($email) > 0){
-            if(!is_null(self::ObtainSingleRecordByIDByModelByQuery("Email = '{$email}'"))){
+            $product = self::BuildQueryByModel("*", "LIMIT 1", "Email = ?", array($email => "s"));
+            if($product->getId() > 0){
                 if(mb_strlen($password) > 0){
-                    if(password_verify($password, $returnRecord["Password"])){
-                        return $email;
+                    if(password_verify($password, $product->ModelData->Password)){
+                        return true;
                     }
                 }  
             }
         }
+        return null;        
+    }
+
+    /**
+     * Authenticates user by setting Cookies
+     * Operates with cookie UserAuthenticatedKrudo
+     * 
+     * @return bool|null
+     */
+    public function Authenticate()
+    {
+        $this->DeAuthenticate();
+        setcookie("UserAuthenticatedKrudo", $this->getId(), time() + (86400 * 3), "/");
+    }
+
+    /**
+     * DeAuthenticates user by unsetting user Cookies
+     * Operates with cookie UserAuthenticatedKrudo
+     * 
+     * @return bool|null
+     */
+    public function DeAuthenticate()
+    {
+        if(isset($_COOKIE["UserAuthenticatedKrudo"])){
+            unset($_COOKIE["UserAuthenticatedKrudo"]);
+            setcookie('UserAuthenticatedKrudo', FALSE, -1, '/');
+            return true;
+        }else{
+            return false;
+        }
         return null;
-        
     }
 
 }

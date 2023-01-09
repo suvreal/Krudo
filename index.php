@@ -46,8 +46,25 @@ spl_autoload_register(function ($class_name) {
 // echo("</pre>");
 // echo("<br/>");
 // echo($model->getAttributeValue("Price"));
-// $model->SaveRecords();
+// $model->SaveRecord();
 // $model->getId();
+
+
+
+/*
+$model = models\Product::getInstance(); 
+$dataToSave = array(
+    "Title" => "Test product 6",
+    "Description" => "test product 6",
+    "ShortDescription" => "prod 6",
+    "DiscountPrice" => 850,
+    "Price" => 700,
+);
+$model->setAttributeValues($dataToSave);
+var_export($model->getAttributeValues());
+$model->SaveRecord();
+$model->getId();
+*/
 
 //var_export(\models\Product::prepareConnection());
 
@@ -70,7 +87,7 @@ spl_autoload_register(function ($class_name) {
 // $testModelInstance2->setAttributeValues($dataToSave);
 // echo($testModelInstance2->getId());
 // echo("<br>");
-// var_export(($testModelInstance2->SaveRecords())->get_result());
+// var_export(($testModelInstance2->SaveRecord())->get_result());
 
 // echo("<pre>");
 // var_export($testModelInstance2);
@@ -83,7 +100,7 @@ spl_autoload_register(function ($class_name) {
 
 /*MODEL QUERY SINGLE TEST START*/
 // echo("<pre>");
-// var_export(models\Product::ObtainAllRecordsByModel("Price < 500")); // ObtainAllRecordsByModel, PerformQueryByModel
+// var_export(models\Product::ObtainAllRecordsByModel("Price < 500")); // ObtainAllRecordsByModel
 // echo("</pre>");
 /*MODEL QUERY SINGLE TEST END*/
 
@@ -99,7 +116,7 @@ spl_autoload_register(function ($class_name) {
 // );
 // // $testModel4->DeleteRecord();
 // $model->setAttributeValues($dataToSave);
-// $model->SaveRecords();
+// $model->SaveRecord();
 // echo($model->getId());
 
 // echo($model->getId());
@@ -186,6 +203,14 @@ spl_autoload_register(function ($class_name) {
 
 
 /*authentication - START*/
+
+// models\User::getInstance(6)->DeleteRecord();
+// models\User::getInstance(5)->DeleteRecord();
+// models\User::getInstance(4)->DeleteRecord();
+// models\User::getInstance(3)->DeleteRecord();
+
+
+
 // echo("<pre>");
 // $userModelInstance = models\User::getInstance();
 // $userModelInstance->setAttributeValues(
@@ -199,23 +224,51 @@ spl_autoload_register(function ($class_name) {
 //         "Active" => 0,
 //     )
 // );
-// var_export($userModelInstance->setAttributeValue("Email", "asdasd@test.test"));
-// var_export($userModelInstance->SaveRecords());
+// var_export($userModelInstance->setAttributeValue("Email", "asdasd654asdsadada@test.test"));
+// var_export($userModelInstance->SaveRecord());
 // var_export($userModelInstance->getAttributeValues());
 // echo("</pre>");
 
-$userModelInstance = models\User::getInstance(2);
-// echo(password_verify('6546544fdasdf', $userModelInstance->ModelData->Password));
-var_export($userModelInstance->Authenticate($userModelInstance->getAttributeValue("Email"), "6546544fdasdf"));
 
+// $userModelInstance = models\User::getInstance(2);
+// echo(password_verify('6546544fdasdf', $userModelInstance->ModelData->Password));
+// echo("<pre>");
+// var_export($userModelInstance->AuthenticateCheck("asdasd@test.test", "6546544fdasdf")); //6546544fdasdf
+// echo("</pre>");
+// $userModelInstance->Authenticate();
+// var_export($userModelInstance->DeAuthenticate());
 
 /*authentication - END*/
 
 
-// TODO: test search for products
+
+/*BUILD QUERY TEST - START*/
+
+// var_export(
+//     models\User::BuildQueryByModel(
+//         "*", 
+//         "ORDER BY Title ASC", 
+//         "Title LIKE '?'", 
+//         array("prod" => "s")
+//     )
+// );
+// var_export(models\Product::BuildQueryByModel("*", "", "ID = 17"));
+// var_export(models\Product::BuildQueryByModel("*", "", "ID = ?", array(17 => 'i')));
+// models\User::BuildQueryByModel("*", "LIMIT 2", "Email = ?", array("asdasd@test.test" => "s"))
+// var_export(models\Product::BuildQueryByModel("*", "", "Price > ? OR Price < ?", array(100 => "i", 1000 => "i")));
+// echo("<pre>");
+// var_export(models\Product::BuildQueryByModel("*", "", "Title LIKE ? OR Description LIKE ?", array("Test product 5" => "s", "prod 5" => "s")));
+// echo("</pre>");
+
+/*BUILD QUERY TEST - END*/
+
+
+
+
 // TODO: create URL identification
 // TODO: call static page or instance of model (Product and app settings)
 // TODO: complet return page with templates: header, content, footer
 // TODO: content of tempate structure might be extra content with CSS or just controller (identify it in controller class with static property $templateType with values "controller" or "template")
 // TODO: create FE components: forms - C&D, 
+// TODO: solve submits and processing of forms
 

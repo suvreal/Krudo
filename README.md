@@ -30,7 +30,6 @@ A basic PHP framework application for your product management written in pure PH
 6. Run application in PHP webserver
 7. App is implemented and provied on desired path
 
-
 ## Usage:
 Generally there is important to clone and paste root of app into adequate folder, import database and run webserver for this app. More steps below.
 1. Have PHP 8.0 environment prepared with MySQL 8.0

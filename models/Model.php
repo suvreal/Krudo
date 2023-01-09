@@ -27,32 +27,13 @@ Class Model{
     /**
      * Contains MySQLI object to perform database connection
      * 
-     * @var mysqli $Connection
+     * @var \mysqli $Connection
      */
     public $Connection = null;
 
-    public function __construct()
+    public function __construct(\mysqli $connection)
     {
-        $conn = MySQLConnection::getInstance();
-        $conn::performDatabaseConnection();
-        $this->Connection = $conn::getDatabaseConnection();
-      
-    }
-
-    /**
-     * Prepare DB connection
-     * 
-     * @return \mysqli|null
-     */
-    public static function prepareConnection(){
-        try{
-            $conn = MySQLConnection::getInstance();
-            $conn::performDatabaseConnection();
-            return $conn::getDatabaseConnection();
-        }catch(\Exception $e){
-            echo("Database connect problem:". $e->getMessage());
-            return null;
-        }
+        $this->Connection = $connection;
     }
 
     /**
@@ -63,33 +44,32 @@ Class Model{
      */
     public static function getInstance(int $IDModel = null){
         $calledClass = new \ReflectionClass(get_called_class());
-        if(is_null($IDModel) || ($IDModel == 0)){
-            if(class_exists($calledClass->name)){
-                $className = $calledClass->name;
-                $aModelInstance = new $className;
-                $aModelInstance->ModelData = new stdClass();
-                $aModelInstance->ModelData->ID = 0;
-                self::setAttributeKeys($aModelInstance);
-            }
+        if((is_null($IDModel) || $IDModel == 0) && class_exists($calledClass->name)){
+            $className = $calledClass->name;
+            $aModelInstance = new $className(MySQLConnection::getDatabaseConnection());
+            $aModelInstance->ModelData = new stdClass();
+            $aModelInstance->ModelData->ID = 0;
+            self::setAttributeKeys($aModelInstance);
+            return $aModelInstance;
         }
         if(!is_null($IDModel) && ($IDModel > 0)){
             if (array_key_exists($IDModel, ($calledClass->name)::$Instances)){
-                return ($calledClass->name)::$Instance[$IDModel];
+                return ($calledClass->name)::$Instances[$IDModel];
             }else{
-                if(($results = (self::getInstance())::obtainSingleRecordByIDByModel($IDModel))){ // TODO: add static method here to obtain single record this is weird
+                if($results = (self::getInstance())::obtainSingleRecordByIDByModel($IDModel)){
                     $className = $calledClass->name;
-                    $aModelInstance = new $className;
+                    $aModelInstance = new $className(MySQLConnection::getDatabaseConnection());
                     $aModelInstance->ModelData = new stdClass();
                     $aModelInstance->ModelData->ID = $results["ID"]; 
                     self::setAttributeKeys($aModelInstance);
                     $aModelInstance->setAttributeValues($results);
                     $aModelInstance::$Instances[$aModelInstance->ModelData->ID] = $aModelInstance;
+                    return $aModelInstance;
                 }else{
                     return null;
                 }
             }
         }
-        return $aModelInstance;
     }
 
     /**
@@ -126,9 +106,7 @@ Class Model{
     {
         $calledClass = new \ReflectionClass(get_called_class());
         if(class_exists($calledClass->name)){
-            $calledClassStatics = $calledClass->getStaticProperties();
-            $bindParamValues = implode("",array_values($calledClassStatics));
-            return $bindParamValues;
+            return implode("",array_values($calledClass->getStaticProperties()));
         }
         return null;
     }
@@ -163,38 +141,7 @@ Class Model{
         }       
         return null;
     }
-    
-    /**
-     * Obtain database single record according to model class and query
-     *
-     * @param string $postWhereQuery query to proceed
-     * @return null|array
-     */
-    public static function PerformQueryByModel(string $postWhereQuery = ""){
-        if(is_null($table = self::getModelTableName())){
-            return null;
-        }
-        if($postWhereQuery != ""){
-            $postWhereQuery = "WHERE ".$postWhereQuery;
-        }
-        try{
-            $connection = self::prepareConnection();
-            $result = $connection->query("SELECT * FROM {$table} {$postWhereQuery} LIMIT 1");
-            $resultArray = array();
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    $resultArray[] = $row;
-                }
-                $result = $resultArray;
-            }else{
-                $result = null;
-            }
-        }catch(\Exception $e){
-            echo("Database operation problem:". $e->getMessage());
-        }
-        return $result;
-    }
-    
+     
     /**
      * Obtain database single record by ID and model class
      *
@@ -206,48 +153,66 @@ Class Model{
         if(is_null($table = self::getModelTableName())){
             return null;
         }
-        try{
-            $connection = self::prepareConnection();
-            $statement = $connection->prepare("SELECT * FROM {$table} WHERE ID = ? LIMIT 1");
-            $statement->bind_param('i', $ID);
-            $statement->execute();
-            $result = $statement->get_result();
-            $result = $result->fetch_array(MYSQLI_ASSOC);   
-        }catch(\Exception $e){
-            echo("Database operation problem:". $e->getMessage());
-        }
+        $connection = MySQLConnection::getDatabaseConnection();
+        $statement = $connection->prepare("SELECT * FROM {$table} WHERE ID = ? LIMIT 1");
+        $statement->bind_param('i', $ID);
+        $statement->execute();
+        $result = $statement->get_result();
+        $result = $result->fetch_array(MYSQLI_ASSOC);   
         return $result;
     }
 
-    // TODO: this should be prepared even though as single value
     /**
      * Obtain database single record by where query
      *
+     * @param string $attributeSelect
+     * @param string $queryTail
      * @param string $whereQuery
+     * @param array $bindValues
      * @return null|array
      */
-    public static function ObtainSingleRecordByIDByModelByQuery(string $whereQuery)
-    {  
-        if(is_null($table = self::getModelTableName())){
+    public static function BuildQueryByModel(string $attributeSelect, string $queryTail = "", string $whereQuery = "", array $bindValues = null)
+    {
+        if(!is_null($bindValues) && ($whereQuery == "")){
             return null;
-        }
+        }   
+
         if($whereQuery != ""){
             $whereQuery = "WHERE ".$whereQuery;
         }
-        try{
-            $connection = self::prepareConnection();
-
-            $result = $connection->query("SELECT * FROM {$table} {$whereQuery} LIMIT 1");
-            if($result->num_rows == 0){
-                return null;
-            }
-
-            $result = $connection->get_result();
-            $result = $result->fetch_array(MYSQLI_ASSOC);   
-        }catch(\Exception $e){
-            echo("Database operation problem:". $e->getMessage());
+        if($attributeSelect == ""){
+            $attributeSelect = "*";
         }
-        return $result;
+
+        if(is_null($table = self::getModelTableName())){
+            return null;
+        }
+                
+        $connection = MySQLConnection::getDatabaseConnection();
+        if(!is_null($bindValues)){
+            $statement = $connection->prepare("SELECT {$attributeSelect} FROM {$table} {$whereQuery} {$queryTail}");
+            $statement->bind_param(implode("",array_values($bindValues)), ...array_keys($bindValues));
+            $statement->execute();
+            $statement = $statement->get_result();     
+            if($statement && $statement->num_rows > 0){
+                $returnInstances = array();
+                while($row = $statement->fetch_assoc()) {
+                    $returnInstances[] = self::getInstance($row["ID"]);
+                }
+                return $returnInstances;
+            }
+        }else{
+            $result = $connection->query("SELECT {$attributeSelect} FROM {$table} {$whereQuery} {$queryTail}");
+            $returnInstances = array();
+            if ($result && $result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    $returnInstances[] = self::getInstance($row["ID"]);
+                }
+            }
+            return $returnInstances;
+        }
+
+        return null;
     }
     
     /**
@@ -265,25 +230,21 @@ Class Model{
         if($postWhereQuery != ""){
             $postWhereQuery = "WHERE ".$postWhereQuery;
         }
-        try{
-            $connection = self::prepareConnection();
-            $result = $connection->query("SELECT * FROM {$table} {$postWhereQuery}");
-            $resultArray = array();
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    if(($returnObjects == TRUE)){
-                        $resultArray[] = self::getInstance(intval($row["ID"]));
-                    }else{
-                        $resultArray[] = $row;
-                    }
-                    
+        $connection = MySQLConnection::getDatabaseConnection();
+        $result = $connection->query("SELECT * FROM {$table} {$postWhereQuery}");
+        $resultArray = array();
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                if(($returnObjects == TRUE)){
+                    $resultArray[] = self::getInstance(intval($row["ID"]));
+                }else{
+                    $resultArray[] = $row;
                 }
-                $result = $resultArray;
-            }else{
-                $result = null;
+                
             }
-        }catch(\Exception $e){
-            echo("Database operation problem:". $e->getMessage());
+            $result = $resultArray;
+        }else{
+            $result = null;
         }
         return $result;
     }
@@ -292,11 +253,11 @@ Class Model{
     * Select from DB to lookup
     *
     * @param string $query
-    * @return null|mysqli
+    * @return null|\mysqli
     */
     public static function PerformQuery(string $query)
     {
-        $connection = self::prepareConnection();
+        $connection = MySQLConnection::getDatabaseConnection();
         $result = $connection->query($query);
         if($result->num_rows > 0){
             return $result;
@@ -323,20 +284,18 @@ Class Model{
      */
     public function getAttributeValues()
     {
-        if($this instanceof \models\Model){
-            return $this->ModelData;
-        }
+        return $this->ModelData;
     }
 
     /**
      * Set ID of desired object
      * 
      * @param int $recordID
-     * @return Model|null
+     * @return int|null
      */
     public function setId(int $recordID)
     {
-        if($this instanceof \models\Model){
+        if(property_exists($this, "ModelData")){
            return $this->ModelData->ID = $recordID;
         }
         return null;
@@ -350,7 +309,7 @@ Class Model{
      */
     public function getId()
     {
-        if($this instanceof \models\Model){
+        if(property_exists($this->ModelData, "ID")){
             return $this->ModelData->ID;
         }
         return null;
@@ -381,28 +340,23 @@ Class Model{
      * @param string $attributeValue
      * @return Model $ModelData
      */
-    public function setAttributeValue(string $attributeKey, string $attributeValue)
+    public function setAttributeValue(string $attributeKey, $attributeValue)
     {
-        $calledClass = new \ReflectionClass(get_called_class());
-        if(class_exists($calledClass->name)){
-            if(property_exists($this, $attributeKey)){
-                $this->ModelData->{$attributeKey} = $attributeValue;
-            }
+        if(property_exists($this, $attributeKey)){
+            $this->ModelData->{$attributeKey} = $attributeValue;
         }
     }
 
     /**
      * Get single attribute value of called class
      * 
-     * @param array $recordModelData
-     * @return array $classOjectAttributes
+     * @param string $recordModelDataKey
+     * @return string|int $classOjectAttributes
      */
-    public function getAttributeValue($recordModelDataKey)
+    public function getAttributeValue(string $recordModelDataKey)
     {
-        if($this instanceof \models\Model){
-            if(property_exists($this, $recordModelDataKey)){
-                return $this->ModelData->{$recordModelDataKey};
-            }
+        if(property_exists($this, $recordModelDataKey)){
+            return $this->ModelData->{$recordModelDataKey};
         }
     }
 
@@ -413,19 +367,17 @@ Class Model{
     * @param $data as data values to be saved
     * @return null|true
     */
-    public function SaveRecords()
+    public function SaveRecord()
     {
         $data = (array) $this->getAttributeValues();
-        if($this instanceof \models\Model){
-            $newRecord = NULL;
-            if($this->getId() == 0){
-                unset($data["ID"]);
-                $newRecord = TRUE;
-                $queryPrefix = "INSERT INTO";
-            }
-            if($this->getId() > 0){
-                $queryPrefix = "REPLACE INTO";
-            }       
+        $newRecord = NULL;
+        if($this->getId() == 0){
+            unset($data["ID"]);
+            $newRecord = TRUE;
+            $queryPrefix = "INSERT INTO";
+        }
+        if($this->getId() > 0){
+            $queryPrefix = "REPLACE INTO";
         }
       
         $arrayKeys = implode(",", array_keys($data));      
@@ -446,16 +398,13 @@ Class Model{
         $connectionStatement = $this->Connection->prepare("{$queryPrefix} {$table} ({$arrayKeys}) VALUES ({$bindCharacters})");
         $connectionStatement->bind_param($bindParams, ...array_values($data));
         
-        try{
-            $connectionStatement->execute();
-            if($newRecord == TRUE){
-                $this->setId($connectionStatement->insert_id);
-                $this::$Instances[$connectionStatement->insert_id] = $this;
-            }
-            return $connectionStatement;
-        }catch(\Exception $e){
-            echo("Database operation problem:". $e->getMessage());
+        $connectionStatement->execute();
+        if($newRecord == TRUE){
+            $this->setId($connectionStatement->insert_id);
+            $this::$Instances[$connectionStatement->insert_id] = $this;
         }
+        return $connectionStatement;
+   
     }
 
     /**
@@ -468,12 +417,8 @@ Class Model{
         if(is_null($table = self::getModelTableName())){
             return null;
         }
-        try{
-            $result = $this->Connection->query("DELETE FROM {$table} WHERE ID = {$this->getId()}");
-            $this->removeInstance();
-        }catch(\Exception $e){
-            echo("Database operation problem:". $e->getMessage());
-        }
+        $result = $this->Connection->query("DELETE FROM {$table} WHERE ID = {$this->getId()}");
+        $this->removeInstance();
         return $result;
     }
 

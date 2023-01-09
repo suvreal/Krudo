@@ -17,13 +17,6 @@ Class MySQLConnection{
      */
     private $DatabaseConnection = null;
 
-
-    /**
-     * @var $ApplicationConfiguration
-     */
-    private $ApplicationConfiguration = null;
-    
-
     public function __construct(){}
 
     /**
@@ -51,17 +44,16 @@ Class MySQLConnection{
      * Performs database connection
      * 
      * @var DatabaseConnection setter
-     * @return mysqli
+     * @return \mysqli
      */
     public static function performDatabaseConnection(){
         $MySQLConnection = self::getInstance();
-        $MySQLConnection->ApplicationConfiguration = MySQLDatabaseConfiguration::getDatabaseConfiguration();
         $MySQLConnection->DatabaseConnection = new \mysqli(
-            $MySQLConnection->ApplicationConfiguration["Address"], 
-            $MySQLConnection->ApplicationConfiguration["User"], 
-            $MySQLConnection->ApplicationConfiguration["Pass"],
-            $MySQLConnection->ApplicationConfiguration["DatabaseName"],
-            $MySQLConnection->ApplicationConfiguration["Port"]
+            constant("APP_DB_ADDRESS"), 
+            constant("APP_DB_USER"), 
+            constant("APP_DB_PASSWORD"),
+            constant("APP_DB_NAME"),
+            constant("APP_DB_PORT")
         );
 
         return $MySQLConnection;
@@ -74,12 +66,9 @@ Class MySQLConnection{
      * @return \mysqli
      */
     public static function getDatabaseConnection(){
-        try{
-            $MySQLConnection = self::getInstance();
-            return $MySQLConnection->DatabaseConnection;
-        }catch(\Exception $e){
-            echo("Database connection problem:". $e->getMessage());           
-        }
+        $MySQLConnection = self::getInstance();
+        $MySQLConnection::performDatabaseConnection();
+        return $MySQLConnection->DatabaseConnection;
     }
 
 }
