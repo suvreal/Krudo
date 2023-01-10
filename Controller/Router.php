@@ -110,6 +110,7 @@ Class Router {
     public function __construct(string $pathName){
         $this->setPathName($pathName);
         $this->setExpectedRequestKeys();
+        $this->provideRoute();
     }
 
 
@@ -225,11 +226,7 @@ Class Router {
      * @return void
      */
     public function provideContent(string $controllerClassName){
-        
         $controllerClass = "\\controller\\".$controllerClassName;
-        
-
-
         if(class_exists("\\models\\".$controllerClassName)){
             $modelControllerClass = "\\models\\".$controllerClassName;
             $expectedRouteRequestKeys = $this->getExpectedRequestKeys();

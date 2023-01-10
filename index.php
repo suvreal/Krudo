@@ -19,17 +19,22 @@ spl_autoload_register(function ($class) {
     return false;
 });
 
-/*********/
-/*Routing*/
-/*********/
-$_GET["ID"] = 20;
-$routeTest = new \controller\Router("product");
-$routeTest->provideRoute();
+/**************************/
+/*URL Processing & ROUTING*/
+/**************************/
+if(array_key_exists("PATH_INFO", $_SERVER)){
+    if($ProcessedURL = explode("/", $_SERVER["PATH_INFO"])[1]){
+        new \controller\Router($ProcessedURL);
+    }
+}
+if(!array_key_exists("PATH_INFO", $_SERVER)){
+    new \controller\Router("products");
+}
+
 
 /************/
 /*Run & test*/
 /************/
-
 
 // $conn = MySQLConnection::getInstance();
 // $conn::performDatabaseConnection();
@@ -268,13 +273,13 @@ $model->getId();
 
 
 
-
-// TODO: create URL identification
-// TODO: check requests by all forms
 // TODO: add types for routes params or just remove it
+// TODO: check requests by all forms
+// TODO: create FE components: forms - C&D, search, full CRUD + S (async search)
+
 // TODO: add styles
 // TODO: add styles and scripts dependencies
 // TODO: add footer dependencies according to settings ETC
-// TODO: create FE components: forms - C&D, 
+
 
 
