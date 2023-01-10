@@ -11,7 +11,6 @@ use stdClass;
  */
 Class Model{
 
-
     /**
      * Data properties of model instance
      * 

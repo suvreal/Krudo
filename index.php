@@ -10,17 +10,21 @@ require("appConfiguration.php");
 /*************/
 /*Autoloading*/
 /*************/
-spl_autoload_register(function ($class_name) {
-    include $class_name . '.php';
+spl_autoload_register(function ($class) {
+    $file = str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
+    if (file_exists($file)) {
+        require $file;
+        return true;
+    }
+    return false;
 });
 
 /*********/
 /*Routing*/
 /*********/
-// include("appConfiguration.php");
-// constant("APP_ROOT");
-// TODO: process request and path according to root folder path which is expected as krudo
-
+$_GET["ID"] = 20;
+$routeTest = new \controller\Router("product");
+$routeTest->provideRoute();
 
 /************/
 /*Run & test*/
@@ -266,9 +270,11 @@ $model->getId();
 
 
 // TODO: create URL identification
-// TODO: call static page or instance of model (Product and app settings)
-// TODO: complet return page with templates: header, content, footer
-// TODO: content of tempate structure might be extra content with CSS or just controller (identify it in controller class with static property $templateType with values "controller" or "template")
+// TODO: check requests by all forms
+// TODO: add types for routes params or just remove it
+// TODO: add styles
+// TODO: add styles and scripts dependencies
+// TODO: add footer dependencies according to settings ETC
 // TODO: create FE components: forms - C&D, 
-// TODO: solve submits and processing of forms
+
 
