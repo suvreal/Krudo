@@ -170,7 +170,7 @@ Class Model{
      * @param array $bindValues
      * @return null|array
      */
-    public static function BuildQueryByModel(string $attributeSelect, string $queryTail = "", string $whereQuery = "", array $bindValues = null)
+    public static function BuildQueryByModel(string $attributeSelect, string $queryTail = "", string $whereQuery = "", string $bindTypes = null, array $bindValues = null)
     {
         if(!is_null($bindValues) && ($whereQuery == "")){
             return null;
@@ -188,9 +188,9 @@ Class Model{
         }
                 
         $connection = MySQLConnection::getDatabaseConnection();
-        if(!is_null($bindValues)){
+        if(!is_null($bindTypes)){
             $statement = $connection->prepare("SELECT {$attributeSelect} FROM {$table} {$whereQuery} {$queryTail}");
-            $statement->bind_param(implode("",array_values($bindValues)), ...array_keys($bindValues));
+            $statement->bind_param($bindTypes, ...$bindValues);
             $statement->execute();
             $statement = $statement->get_result();     
             if($statement && $statement->num_rows > 0){
@@ -409,16 +409,23 @@ Class Model{
     /**
      * Performs delete of record
      * 
-     * @return true|null
+     * @return false|null
      */
     public function DeleteRecord()
     {
-        if(is_null($table = self::getModelTableName())){
+        if(is_null($table = self::getMOdelTableName())){
             return null;
         }
-        $result = $this->Connection->query("DELETE FROM {$table} WHERE ID = {$this->getId()}");
-        $this->removeInstance();
-        return $result;
+        if($this->getId() <= 0){
+            return null;
+        }
+        $ID = $this->getId();
+        $connection = MySQLConnection::getDatabaseConnection();
+        $statement = $connection->prepare("DELETE FROM {$table} WHERE ID = ?");
+        $statement->bind_param('i', $ID);
+        $statement->execute();
+        $result = $statement->get_result();
+        return $result;  
     }
 
 }

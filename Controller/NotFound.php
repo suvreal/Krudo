@@ -19,7 +19,7 @@ Class NotFound extends Controller {
      * 
      * @property string $PageTitle
      */
-    static $PageTitle = "Nenalezeno"; 
+    static $PageTitle = "Not found"; 
 
     public function __construct()
     {

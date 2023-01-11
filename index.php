@@ -31,10 +31,14 @@ if(!array_key_exists("PATH_INFO", $_SERVER)){
     new \controller\Router("products");
 }
 
-
 /************/
 /*Run & test*/
 /************/
+
+
+// echo("<pre>");
+// var_export(models\Product::BuildQueryByModel("*", "", "Title LIKE ? OR Description LIKE ?", array("Test product 5" => "s", "prod 5" => "s")));
+// echo("</pre>");
 
 // $conn = MySQLConnection::getInstance();
 // $conn::performDatabaseConnection();
@@ -247,6 +251,13 @@ $model->getId();
 // $userModelInstance->Authenticate();
 // var_export($userModelInstance->DeAuthenticate());
 
+// $modelTest = models\User::getInstance();
+// if($modelTest->AuthenticateCheck("asdasd@test.test", "6546544fdasdf")){
+//     echo("true");
+// }else{
+//     echo("null");
+// }
+
 /*authentication - END*/
 
 
@@ -273,13 +284,13 @@ $model->getId();
 
 
 
-// TODO: add types for routes params or just remove it
-// TODO: check requests by all forms
-// TODO: create FE components: forms - C&D, search, full CRUD + S (async search)
+
+// TODO: forms submit
+// TODO: create FE components
 
 // TODO: add styles
 // TODO: add styles and scripts dependencies
-// TODO: add footer dependencies according to settings ETC
+
 
 
 

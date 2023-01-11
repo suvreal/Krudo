@@ -1,1 +1,21 @@
-<h2>User something</h2>
+<h2 style="text-align: center;">User authentication</h2>
+
+<?php if(!is_null($this->Controller->ResultMessageState)):?>
+<div class="user-message">
+    <h3 class="user-message-title"><?php echo($this->Controller->ResultMessage["title"]);?></h3>
+    <span class="user-message-content"><?php echo($this->Controller->ResultMessage["content"]);?></span>
+</div>
+<?php endif;?>
+
+<form action="/login" method="post" id="login-form">
+
+    <label for="userEmail">Email:</label>
+    <input id="userEmail" name="userEmail" type="email" placeholder="test@email.cz" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z0-9.-]{1,}[.]{1}[a-zA-Z0-9]{2,}" required>
+
+    <label for="userPassword">Heslo:</label>
+    <input id="userPassword" name="userPassword" type="password" placeholder="password" required>
+
+    <button>Log in</button>
+
+</form>
+

@@ -25,14 +25,14 @@ Class Router {
             "routerClass" => "User",
             "requestKeys" => array(
                 "GET" => null,
-                "POST" => array("name" => "s", "password" => "s")
+                "POST" => array("userEmail", "userPassword")
             ),
         ),
         "logout" => array(
-            "routerClass" => "User",
+            "routerClass" => "Logout",
             "requestKeys" => array(
                 "GET" => null,
-                "POST" => array("ID" => "i")
+                "POST" => null,
             ),
         ),
         "products" => array(
@@ -45,15 +45,8 @@ Class Router {
         "product" => array(
             "routerClass" => "Product",
             "requestKeys" => array(
-                "GET" => array("ID" => "i"),
-                "POST" => null
-            ),
-        ),
-        "productDelete" => array(
-            "routerClass" => "Product",
-            "requestKeys" => array(
-                "GET" => array("ID" => "i"),
-                "POST" => null
+                "GET" => array("ID"),
+                "POST" => array("Title", "Description", "ShortDescription", "Price", "DiscountPrice")
             ),
         ),
         "app" => array(
@@ -107,7 +100,8 @@ Class Router {
     /**
      * @param string $pathName
      */
-    public function __construct(string $pathName){
+    public function __construct(string $pathName)
+    {
         $this->setPathName($pathName);
         $this->setExpectedRequestKeys();
         $this->provideRoute();
@@ -119,7 +113,8 @@ Class Router {
      * 
      * @return @property $ExpectedRequestKeys
      */
-    public function getExpectedRequestKeys(){
+    public function getExpectedRequestKeys()
+    {
         return $this->ExpectedRequestKeys;
     }
 
@@ -128,29 +123,30 @@ Class Router {
      * 
      * @return @property $PathName
      */
-    public function getPathName(){
+    public function getPathName()
+    {
         return $this->PathName;
     }
-
 
     /**
      * Obtains allowed request keys according to POST and GET values
      * 
      * @return array @property $ExpectedRequestKeys
      */
-    public function setExpectedRequestKeys(){
+    public function setExpectedRequestKeys()
+    {
         $returnArray = array("GET", "POST");
         $requestKeys = self::getRouteRequestKeys($this->PathName);
         if(!is_null($requestKeys)){
             if(!is_null($requestKeys["GET"])){
-                foreach($requestKeys["GET"] as $val => $type){ // TODO: add check type in $type
+                foreach($requestKeys["GET"] as $val){ 
                     if(isset($_GET[$val])){
                         $returnArray["GET"][$val] = $_GET[$val];
                     }
                 }
             }
             if(!is_null($requestKeys["POST"])){
-                foreach($requestKeys["POST"] as $val => $type){ // TODO: add check type in $type
+                foreach($requestKeys["POST"] as $val){ 
                     if(isset($_POST[$val])){
                         $returnArray["POST"][$val] = $_POST[$val];
                     }
@@ -167,7 +163,8 @@ Class Router {
      * @param string $pathName
      * @return @property $PathName
      */
-    public function setPathName(string $pathName){
+    public function setPathName(string $pathName)
+    {
         return $this->PathName = $pathName;
     }
 
@@ -177,7 +174,8 @@ Class Router {
      * 
      * @return void
      */
-    public function provideRoute(){
+    public function provideRoute()
+    {
         if($resultRouteControllerContent = $this->provideContent($this->getRouteValue($this->PathName))){
             return $resultRouteControllerContent;
         }else{
@@ -191,7 +189,8 @@ Class Router {
      * @param string $pathName
      * @return string 
      */
-    public function getRouteValue(string $pathName){
+    public function getRouteValue(string $pathName)
+    {
         if(array_key_exists($pathName, self::$Routes)){
             if(class_exists("\\controller\\".self::$Routes[$pathName]["routerClass"])){
                 return self::$Routes[$pathName]["routerClass"];
@@ -208,7 +207,8 @@ Class Router {
      * @param string $pathName
      * @return null|array 
      */
-    public function getRouteRequestKeys(string $pathName){
+    public function getRouteRequestKeys(string $pathName)
+    {
         if(array_key_exists($pathName, self::$Routes)){
             if(class_exists("\\controller\\".self::$Routes[$pathName]["routerClass"])){
                 return self::$Routes[$pathName]["requestKeys"];
@@ -225,7 +225,8 @@ Class Router {
      * @param string $controllerClassName
      * @return void
      */
-    public function provideContent(string $controllerClassName){
+    public function provideContent(string $controllerClassName)
+    {
         $controllerClass = "\\controller\\".$controllerClassName;
         if(class_exists("\\models\\".$controllerClassName)){
             $modelControllerClass = "\\models\\".$controllerClassName;

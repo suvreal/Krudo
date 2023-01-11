@@ -1,5 +1,102 @@
-<h2>My products</h2>
+<h2><span class="material-icons" title="search records">search</span>My products</h2>
+<a href="/product"><button id="add-product" title="add product"><span class="material-icons" title="add new product">add</span>Add product</button></a>
 
-<?php
-var_export($this->Controller->searchProducts("asd"));
-?>
+
+<?php if(!is_null($this->Controller->ResultMessageState)):?>
+<div class="user-message">
+    <h3 class="user-message-title"><?php echo($this->Controller->ResultMessage["title"]);?></h3>
+    <span class="user-message-content"><?php echo($this->Controller->ResultMessage["content"]);?></span>
+</div>
+<?php endif;?>
+
+
+<div class="search-box">
+    <input id="searchInput" type="text" name="searchProducts" class="singleInputs" placeholder="Search in products ..." title="Write at least 3 characters">
+</div>
+
+<div class="content-box">
+    <table id="product-data-list" class="data-list">
+        <tbody id="data-records">
+        <?php $products = $this->Controller->getAllProducts();?>
+        <?php if(is_array($products) && count($products) > 0):?>
+      
+                <tr class="data-list-item main-content-record">
+                    <th class="data-list-item-element">Title</th>
+                    <th class="data-list-item-element">Discount Price</th>
+                    <th class="data-list-item-element">Price</th>
+                    <th class="data-list-item-element">Controls</th>
+                </tr>
+                
+                <?php foreach($products as $product):?>
+                    <tr class="data-list-item products-box main-content-record">
+                        <td class="data-list-item-element initial-products"><?php echo htmlspecialchars($product->getAttributeValue("Title"))?></td>
+                        <td class="data-list-item-element initial-products"><?php echo htmlspecialchars($product->getAttributeValue("DiscountPrice"))?></td>
+                        <td class="data-list-item-element initial-products"><?php echo htmlspecialchars($product->getAttributeValue("Price"))?></td>
+                        <td class="data-list-item-element initial-products">
+                            <a href="/product?ID=<?php echo($product->getId());?>"><span class="material-icons" title="edit record">edit_note</span></a>
+                            <a href="/products?deleteProductID=<?php echo($product->getId());?>"><span class="material-icons" title="delete record">delete</span>
+                        </td>
+                    </tr>
+                <?php endforeach;?>
+                        
+        <?php endif;?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+  
+   let timeout;
+    $( document ).ready(function() {
+        $( "#searchInput" ).keypress(function() {       
+            $(".initial-products").hide();
+            $(".searched-products").remove();
+
+            if($(this).val().length >= 3){
+                clearTimeout(timeout);
+                setTimeout(_ => {
+                    performSearchAsyncRequest($(this).val());
+                }, 250);
+            }     
+            if($(this).val().length <= 0){
+                $(".searched-products").remove();
+                $(".initial-products").show();
+            }
+        });
+        $( "#searchInput" ).keyup(function() {
+            if($(this).val().length <= 0){
+                $(".searched-products").remove();
+                $(".initial-products").show();
+            }
+        });
+
+        
+
+    });
+
+    /**
+     * Performs async ajax post request to obtain and writeout products by filter search
+     */
+    function performSearchAsyncRequest(searchValue){
+        $(".initial-products").hide();
+        $(".searched-products").remove();
+        $.ajax({
+            type: "POST",
+            url: "/products",
+            data: {searchProducts: searchValue},
+            dataType:'json', 
+            success: function(response){
+                var arrayVals = Object.values(response)[1];
+                for(var i = 0; i < arrayVals.length ;i++){
+                    $('#product-data-list').append('<tr class="data-list-item products-box searched-products searched-products-record"><td class="data-list-item-element searched-products">'+arrayVals[i].Title+'</td><td class="data-list-item-element searched-products">'+arrayVals[i].DiscountPrice+'</td><td class="data-list-item-element searched-products">'+arrayVals[i].Price+'</td><td class="data-list-item-element searched-products"><a href="/product?ID='+arrayVals[i].ID+'"><span class="material-icons" title="edit record">edit_note</span></a><a href="/products?deleteProductID='+arrayVals[i].ID+'"><span class="material-icons" title="delete record">delete</span></td></tr>');
+                }
+            },
+            error: function(response){
+                console.log(response);                       
+            }
+        });
+    }
+
+</script>
+

@@ -1,0 +1,29 @@
+@media only screen and (min-width: 300px) and (max-width: 500px) {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+        text-align: center;
+    }
+    #main-content-block a button {
+        margin: 20px auto 20px auto;
+    }
+    table td {
+        padding: 5px;
+    }
+    table th {
+        padding: 10px;
+    }
+    #searchInput {
+        text-align: center;
+    }
+    #product-form {
+        margin: auto;
+        width: auto;
+    }
+    #login-form {
+        margin: auto;
+        width: auto;
+    }
+}

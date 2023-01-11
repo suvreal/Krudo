@@ -19,16 +19,46 @@ Class User extends Controller {
      * 
      * @property string $PageTitle
      */
-    static $PageTitle = "Autentifikace"; 
+    static $PageTitle = "Authentication"; 
 
     /**
-     * Product Model object avaiable for Product controller
+     * User Model object avaiable for User controller
+     * 
+     * @property $User
      */
     public $User = null;
 
-    public function __construct(\models\Model $User = null)
+    /**
+     * User result message
+     * 
+     * @property $ResultMessage
+     * @property $ResultMessageState
+     */
+    public $ResultMessage = array(
+        "title" => "",
+        "content" => ""
+    );
+    public $ResultMessageState = NULL;
+
+    public function __construct(\models\User $User = null)
     {
         $this->User = $User;
+        
+        if(\models\User::CheckUserActivity() == true){
+            header('Location: '.$_SERVER["HTTP_ORIGIN"].'/products', TRUE, 302);
+        }
+
+        if(isset($_POST["userEmail"]) && isset($_POST["userPassword"])){
+            if($this->User->AuthenticateCheck($_POST["userEmail"], $_POST["userPassword"])){
+                $this->User->Authenticate();
+                header('Location: '.$_SERVER["HTTP_ORIGIN"].'/products', TRUE, 302);
+            }else{
+                $this->ResultMessageState = TRUE;
+                $this->ResultMessage["title"] = "Wrong user credentials";
+                $this->ResultMessage["content"] = "Try different email or password";
+            }
+        }
+ 
     }
     
 }

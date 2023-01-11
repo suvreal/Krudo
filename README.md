@@ -1,8 +1,8 @@
 # Krudo
-A basic PHP framework application for your product management written in pure PHP OOP.
+A basic pure PHP nano framework application for product management.
 - PHP 8
 - Made with fun and love
-- version 0.2
+- dev version 0.25
 
 ## Features:
 - CRUD of product data
@@ -27,8 +27,12 @@ A basic PHP framework application for your product management written in pure PH
     ```
 
 5. Import database structure from provided file: krudo_sql_structure.sql
-6. Run application in PHP webserver
-7. App is implemented and provied on desired path
+6. Run application in PHP webserver. For example as below in root of application:
+    ```
+    php -S localhost:8000
+    ``` 
+7. App is implemented and provied on desired path, for example: localhost:8000
+8. Default user is provided to login
 
 ## Usage:
 Generally there is important to clone and paste root of app into adequate folder, import database and run webserver for this app. More steps below.
@@ -48,6 +52,13 @@ Generally there is important to clone and paste root of app into adequate folder
 7. Dynamic blocks and element ordering for homepages and pages
 8. Installation process for user access
 
+
+## User test access:
+- name: admin@krudo.cz
+- password: 6546544fdasdf
+
+## Database:
+- database export for implementation & test purposes provided in root directory with name krudo_database.sql - name of database is krudo
 
 ## Author
 SVRL
