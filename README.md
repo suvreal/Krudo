@@ -1,8 +1,9 @@
 # Krudo
-A basic pure PHP nano framework application for product management.
+A basic pure OOP PHP MVP nano framework application for product management.
 - PHP 8
 - Made with fun and love
 - dev version 0.25
+- feedback appreciated
 
 ## Features:
 - CRUD of product data

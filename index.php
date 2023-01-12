@@ -3,9 +3,18 @@
 /*****************/
 /*App preparation*/
 /*****************/
-error_reporting(0);
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 session_start();
+if(!file_exists("appConfiguration.php")){
+    echo("File app configuration is not existing");
+    echo("<br/>");
+    echo("- please create appConfiguration.php file in root of Krudo folder according to fourth step in README.md");
+    exit;
+}
 require("appConfiguration.php");
+
 
 /*************/
 /*Autoloading*/
@@ -19,6 +28,7 @@ spl_autoload_register(function ($class) {
     return false;
 });
 
+
 /**************************/
 /*URL Processing & ROUTING*/
 /**************************/
@@ -30,3 +40,4 @@ if(array_key_exists("PATH_INFO", $_SERVER)){
 if(!array_key_exists("PATH_INFO", $_SERVER)){
     new \controller\Router("products");
 }
+
