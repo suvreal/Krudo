@@ -2,11 +2,12 @@
 A basic pure OOP PHP MVP nano framework application for product management.
 - PHP 8
 - Made with fun and love
-- dev version 0.25
+- dev version 0.33
 - feedback appreciated
+- development but functional version
 
 ## Features:
-- CRUD of product data
+- CRUD (administration) of product data
 - Authentification and user settings
 - Asynchronous search of product
 - Browser responsive and compatible
@@ -52,11 +53,35 @@ Generally there is important to clone and paste root of app into adequate folder
 6. Taxonomy and tags
 7. Dynamic blocks and element ordering for homepages and pages
 8. Installation process for user access
-
+9. Provide status messages
+10. Activity logss
+11. Additional product content: image, gallery, parameters, browse metadata, currency, value added tax
+12. Content writeout for external non-admin use
+13. Submit & request submit handling (source of route, ID-HASH for route key value)
 
 ## User test access:
 - name: admin@krudo.cz
-- password: 6546544fdasdf
+- password: 6546544fdasdf 
+ 
+ 
+## Routes example
+Example of definition of route for in file routesConfiguration.php in root folder:
+   ```
+    "called-string-URL-path" => array(
+        "routerClass" => "adequate-controller-name",
+        "requestKeys" => array(
+            "GET" => array("ID"),
+            "POST" => array("attr-one", "attr-two", "attr-three"),
+        ),
+    ),
+   ```
+- called-string-url-path is $_SERVER PATH_INFO value
+- routerClass is supposed to be set with valid ClassName of Controller namespace
+  - routeClass name is compared in model and view namespaces to get proper view or model
+- requestKeys are expected URL params matching DB attributes to process (save, update, delete, visit)
+- more work will continue to improve request processing according to POST request keys as for update or insert to 
+be better matched with Model attributes
+- called method for particular route will be added
 
 ## Database:
 - database export for implementation & test purposes provided in root directory with name krudo_database.sql - name of database is krudo

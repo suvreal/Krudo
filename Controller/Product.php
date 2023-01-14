@@ -5,24 +5,25 @@ namespace controller;
 /**
  * Controller class which is result of undefined route by URL path name
  */
-Class Product extends Controller {
+class Product extends Router
+{
 
     /**
      * Definition of view type
      * 
      * @property string $ViewType
      */
-    static $ViewType = "template"; 
+    static $ViewType = "template";
 
     /**
      * Definition of HTML Title
      * 
      * @property string $PageTitle
      */
-    static $PageTitle = "Product"; 
+    static $PageTitle = "Product";
 
     /**
-     * Product Model object avaiable for Product controller
+     * Product Model object available for Product controller
      * 
      * @property $Product
      */
@@ -40,22 +41,24 @@ Class Product extends Controller {
     );
     public $ResultMessageState = NULL;
 
-    public function __construct(\models\Product $Product = null)
+    public function __construct(\Model\Product $Product = null)
     {
         $this->Product = $Product;
-        if(\models\User::CheckUserActivity() != true){
-            header('Location: '.$_SERVER["HTTP_ORIGIN"].'/login', TRUE, 302);
+        if (!\Model\User::CheckUserActivity()) {
+            Router::routeHeader("/login");
         }
 
-        if(isset($_POST) && 
-        isset($_POST["Title"]) && 
-        isset($_POST["ShortDescription"]) && 
-        isset($_POST["Description"]) &&
-        isset($_POST["Price"]) && 
-        isset($_POST["DiscountPrice"])
-        ){
+        // TODO: user getExpectedRequestKeys with additional functionality & transform it into separate called method
+        if (
+            isset($_POST) &&
+            isset($_POST["Title"]) &&
+            isset($_POST["ShortDescription"]) &&
+            isset($_POST["Description"]) &&
+            isset($_POST["Price"]) &&
+            isset($_POST["DiscountPrice"])
+        ) {
 
-            if(isset($_POST["ID"])){
+            if (isset($_POST["ID"])) {
                 $ID = $_POST["ID"];
                 $this->Product->setId($ID);
             }
@@ -72,16 +75,13 @@ Class Product extends Controller {
             $this->Product->SaveRecord();
 
 
-            if($this->Product->getId() > 0){
-                header('Location: '.$_SERVER["HTTP_ORIGIN"].'/products', TRUE, 302);
-            }else{
+            if ($this->Product->getId() > 0) {
+                Router::routeHeader("/products");
+            } else {
                 $this->ResultMessageState = TRUE;
-                $this->ResultMessage["title"] = "Error occured while record save";
+                $this->ResultMessage["title"] = "Error occurred while record save";
                 $this->ResultMessage["content"] = "Try operation later or contact administrator";
             }
-            
         }
-
     }
-    
 }

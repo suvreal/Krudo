@@ -1,44 +1,46 @@
-<a href="/products"><h3 style="text-align: center; color:black;"><span class="material-icons" title="add new product">arrow_back</span> Back to products</h3></a>
+<a href="/products">
+    <h3 class="center color-black"><span class="material-icons" title="add new product">arrow_back</span> Back to products</h3>
+</a>
 
 
-<?php if($this->Controller->Product->getId() == 0):?>
-    <h2 style="text-align:center;">New product</h2>
-<?php else:?>
-    <h2 style="text-align:center;"><?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("Title"))?></h2>
-<?php endif;?>
+<?php if ($this->Controller->Product->getId() == 0) : ?>
+    <h2 class="center">New product</h2>
+<?php else : ?>
+    <h2 class="center"><?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("Title")) ?></h2>
+<?php endif; ?>
 
-<?php if(!is_null($this->Controller->ResultMessageState)):?>
-<div class="user-message">
-    <h3 class="user-message-title"><?php echo($this->Controller->ResultMessage["title"]);?></h3>
-    <span class="user-message-content"><?php echo($this->Controller->ResultMessage["content"]);?></span>
-</div>
-<?php endif;?>
+<?php if (!is_null($this->Controller->ResultMessageState)) : ?>
+    <div class="user-message">
+        <h3 class="user-message-title"><?php echo ($this->Controller->ResultMessage["title"]); ?></h3>
+        <span class="user-message-content"><?php echo ($this->Controller->ResultMessage["content"]); ?></span>
+    </div>
+<?php endif; ?>
 
 <form action="/product" method="post" id="product-form">
 
-    <input id="productID" name="ID" type="number" value="<?php echo htmlspecialchars($this->Controller->Product->getId())?>" hidden>
+    <input id="productID" name="ID" type="number" value="<?php echo htmlspecialchars($this->Controller->Product->getId()) ?>" hidden>
 
     <label for="productTitle">Title:</label>
-    <input id="productTitle" name="Title" type="text" placeholder="My product" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("Title"))?>" required>
+    <input id="productTitle" name="Title" type="text" placeholder="My product" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("Title")) ?>" required>
 
     <label for="productShortDesc">Short Description:</label>
-    <input id="productShortDesc" name="ShortDescription" type="text" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("ShortDescription"))?>" placeholder="interesting, green, blue ..." required>
+    <input id="productShortDesc" name="ShortDescription" type="text" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("ShortDescription")) ?>" placeholder="interesting, green, blue ..." required>
 
     <label for="productDesc">Description:</label>
-    <input id="productDesc" name="Description" type="text" placeholder="what does provide my product, what it is usable for" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("Description"))?>" required>
+    <input id="productDesc" name="Description" type="text" placeholder="what does provide my product, what it is usable for" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("Description")) ?>" required>
 
     <label for="productPrice">Price:</label>
-    <input id="productPrice" name="Price" type="number" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("Price"))?>" placeholder="1355" required>
-    
+    <input id="productPrice" name="Price" type="number" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("Price")) ?>" placeholder="1355" required>
+
     <label for="productDiscountPrice">Discount product:</label>
-    <input id="productDiscountPrice" name="DiscountPrice" type="number" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("DiscountPrice"))?>" placeholder="1699" required>
+    <input id="productDiscountPrice" name="DiscountPrice" type="number" value="<?php echo htmlspecialchars($this->Controller->Product->getAttributeValue("DiscountPrice")) ?>" placeholder="1699" required>
 
-    
 
-    <?php if($this->Controller->Product->getId() == 0):?>
+
+    <?php if ($this->Controller->Product->getId() == 0) : ?>
         <button>Save</button>
-    <?php else:?>
+    <?php else : ?>
         <button>Update</button>
-    <?php endif;?>
+    <?php endif; ?>
 
 </form>

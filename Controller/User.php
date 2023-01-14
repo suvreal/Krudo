@@ -5,24 +5,25 @@ namespace controller;
 /**
  * Controller class which is result of undefined route by URL path name
  */
-Class User extends Controller {
+class User extends Router
+{
 
     /**
      * Definition of view type
      * 
      * @property string $viewType
      */
-    static $ViewType = "template"; 
+    static $ViewType = "template";
 
     /**
      * Definition of HTML Title
      * 
      * @property string $PageTitle
      */
-    static $PageTitle = "Authentication"; 
+    static $PageTitle = "Authentication";
 
     /**
-     * User Model object avaiable for User controller
+     * User Model object available for User controller
      * 
      * @property $User
      */
@@ -40,25 +41,31 @@ Class User extends Controller {
     );
     public $ResultMessageState = NULL;
 
-    public function __construct(\models\User $User = null)
+    public function __construct(\Model\User $User = null)
     {
         $this->User = $User;
-        
-        if(\models\User::CheckUserActivity() == true){
-            header('Location: '.$_SERVER["HTTP_ORIGIN"].'/products', TRUE, 302);
+
+        if (\Model\User::CheckUserActivity()) {
+            Router::routeHeader("/products");
         }
 
-        if(isset($_POST["userEmail"]) && isset($_POST["userPassword"])){
-            if($this->User->AuthenticateCheck($_POST["userEmail"], $_POST["userPassword"])){
+        $this->processAuthentication();
+
+    }
+
+    /**
+     * Processes authentication of user
+     */
+    public function processAuthentication(){
+        if (isset($_POST["userEmail"]) && isset($_POST["userPassword"])) {
+            if ($this->User->AuthenticateCheck($_POST["userEmail"], $_POST["userPassword"])) {
                 $this->User->Authenticate();
-                header('Location: '.$_SERVER["HTTP_ORIGIN"].'/products', TRUE, 302);
-            }else{
+                Router::routeHeader("/products");
+            } else {
                 $this->ResultMessageState = TRUE;
                 $this->ResultMessage["title"] = "Wrong user credentials";
                 $this->ResultMessage["content"] = "Try different email or password";
             }
         }
- 
     }
-    
 }

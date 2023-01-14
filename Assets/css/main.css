@@ -7,6 +7,14 @@
         text-decoration: none;
     }
     
+    .center {
+        text-align: center;
+    }
+    
+    .color-black {
+        color: black;
+    }
+    
     a:link {}
     
     a:visited {}

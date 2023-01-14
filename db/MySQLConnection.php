@@ -2,6 +2,9 @@
 
 namespace db;
 
+use Exception;
+use mysqli;
+
 /**
  * Provides database connection to MySQL database
  */
@@ -21,9 +24,11 @@ Class MySQLConnection{
 
     /**
      * Clone secure for singleton object class
+     * @throws Exception
      */
-    public function __clone() {
-        throw new \Exception("Cannot be cloned");
+    public function __clone()
+    {
+        throw new Exception("Cannot be cloned");
     }
 
     /**
@@ -31,8 +36,9 @@ Class MySQLConnection{
      * 
      * @return MySQLConnection
      */
-    public static function getInstance(){
-        if (self::$Instance == null){
+    public static function getInstance(): ?MySQLConnection
+    {
+        if (is_null(self::$Instance)){
             $className = __CLASS__;
             self::$Instance = new $className;
         }
@@ -42,13 +48,13 @@ Class MySQLConnection{
 
     /**
      * Performs database connection
-     * 
-     * @var DatabaseConnection setter
-     * @return \mysqli
+     *
+     * @return ?MySQLConnection
      */
-    public static function performDatabaseConnection(){
+    public static function performDatabaseConnection(): ?MySQLConnection
+    {
         $MySQLConnection = self::getInstance();
-        $MySQLConnection->DatabaseConnection = new \mysqli(
+        $MySQLConnection->DatabaseConnection = new mysqli(
             constant("APP_DB_ADDRESS"), 
             constant("APP_DB_USER"), 
             constant("APP_DB_PASSWORD"),
@@ -61,16 +67,14 @@ Class MySQLConnection{
 
     /**
      * Provides database connection
-     * 
-     * @var DatabaseConnection getter
-     * @return \mysqli
+     *
+     * @return mysqli
      */
-    public static function getDatabaseConnection(){
+    public static function getDatabaseConnection(): mysqli
+    {
         $MySQLConnection = self::getInstance();
         $MySQLConnection::performDatabaseConnection();
         return $MySQLConnection->DatabaseConnection;
     }
 
 }
-
-?>

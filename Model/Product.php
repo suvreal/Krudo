@@ -1,11 +1,12 @@
 <?php
 
-namespace models;
+namespace model;
 
 /**
  * Product model class
  */
-Class Product extends Model{
+class Product extends Model
+{
 
     /**
      * A table name of object Product
@@ -46,5 +47,4 @@ Class Product extends Model{
      * @var @$Price
      */
     static $Price = 'd';
-   
 }

@@ -1,11 +1,16 @@
 <?php
 
-namespace models;
+namespace model;
+
+use Exception;
+use mysqli;
+use mysqli_stmt;
 
 /**
  * User model class
  */
-Class User extends Model{
+class User extends Model
+{
 
     /**
      * A table name of object User
@@ -46,7 +51,7 @@ Class User extends Model{
      * @var @$DateCreated
      */
     static $DateCreated = 's';
-   
+
     /**
      * Attribute User Type of User
      * 
@@ -64,16 +69,11 @@ Class User extends Model{
     /**
      * Checks user from cookie record
      * 
-     * @return bool|null
+     * @return bool
      */
     public static function CheckUserActivity()
     {
-        if(isset($_COOKIE["UserAuthenticatedKrudo"])){
-            return true;
-        }else{
-            return false;
-        }
-        return null;
+        return isset($_COOKIE["UserAuthenticatedKrudo"]);
     }
 
     /**
@@ -84,36 +84,42 @@ Class User extends Model{
      */
     public static function DeAuthenticate()
     {
-        if(isset($_COOKIE["UserAuthenticatedKrudo"])){
+        if (isset($_COOKIE["UserAuthenticatedKrudo"])) {
             unset($_COOKIE["UserAuthenticatedKrudo"]);
             setcookie('UserAuthenticatedKrudo', FALSE, -1, '/');
             return true;
-        }else{
-            return false;
         }
-        return null;
+        return false;
     }
 
     /**
      * SaveRecord method check for validity, duplicities and password
-     * 
-     * @return bool|null
+     *
+     * @return mysqli_stmt|false
+     * @throws Exception
      */
-    public function SaveRecord()
+    public function SaveRecord(): ?mysqli_stmt
     {
-        $data = (array) $this->getAttributeValues();
-        if(isset($data["Email"]) && mb_strlen($data["Email"]) > 0){
-            if(!is_null(self::BuildQueryByModel("*", "LIMIT 1", "Email = ?", "s", array($data["Email"])))){ 
-                throw new \Exception("User already exists");
+        $data = (array) $this->getAttributeValues(); // TODO: getAttributeValuesArray
+        if (isset($data["Email"]) && mb_strlen($data["Email"]) > 0) {
+            if (!is_null(self::BuildQueryByModel(
+                "*",
+                "LIMIT 1",
+                "Email = ?",
+                "s", array($data["Email"])))
+            ) {
+                throw new Exception("User already exists");
             }
         }
-        if(isset($data["Password"]) && (mb_strlen($data["Password"]) > 0)){
-            $options = [
-                'cost' => 12,
-            ];
-            $this->setAttributeValue("Password", password_hash($data["Password"], PASSWORD_BCRYPT, $options));
-        }else{
-            throw new \Exception("Password attribute is empty");
+        if (isset($data["Password"]) && (mb_strlen($data["Password"]) > 0)) {
+            $this->setAttributeValue(
+                "Password",
+                password_hash($data["Password"],
+                    PASSWORD_BCRYPT,
+                    array('cost' => 12))
+            );
+        } else {
+            throw new Exception("Password attribute is empty");
         }
         return parent::SaveRecord();
     }
@@ -123,36 +129,42 @@ Class User extends Model{
      * 
      * @param string $email
      * @param string $password
-     * @return bool|null
+     * @return bool
      */
-    public function AuthenticateCheck(string $email, string $password)
+    public function AuthenticateCheck(string $email, string $password): bool
     {
-        if(mb_strlen($email) > 0){
-            $product = self::BuildQueryByModel("*", "LIMIT 1", "Email = ?", "s", array($email));
-            if(!is_null($product) && $product[0]->getId() > 0){
-                $this->setAttributeValues((array)$product[0]->ModelData);
-                $this->setId($product[0]->getId());
-                $this->getAttributeValues();
-                if(mb_strlen($password) > 0){
-                    if(password_verify($password, $product[0]->ModelData->Password)){
-                        return true;
-                    }
-                }  
-            }
+
+        if (mb_strlen($email) <= 0) {
+            return false;
         }
-        return null;        
+
+        $product = self::BuildQueryByModel(
+            "*",
+            "LIMIT 1",
+            "Email = ?",
+            "s",
+            array($email)
+        );
+
+        if (is_null($product) && $product[0]->getId() <= 0) {
+            return false;
+        }
+
+        $this->setAttributeValues((array)$product[0]->ModelData);
+        $this->setId($product[0]->getId());
+        return password_verify($password, $product[0]->ModelData->Password);
+
     }
 
     /**
      * Authenticates user by setting Cookies
      * Operates with cookie UserAuthenticatedKrudo
      * 
-     * @return bool|null
+     * @return void
      */
-    public function Authenticate()
+    public function Authenticate(): void
     {
         self::DeAuthenticate();
         setcookie("UserAuthenticatedKrudo", $this->getId(), time() + (86400 * 3), "/");
     }
-
 }

@@ -1,32 +1,30 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title><?php echo(htmlspecialchars($this->Controller::$PageTitle));?></title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../Assets/css/main.css">
-<link rel="stylesheet" type="text/css" href="../Assets/css/mainResponsive.css">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title><?php echo (htmlspecialchars($this->Controller::$PageTitle)); ?></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../Assets/CSS/main.css">
+    <link rel="stylesheet" type="text/css" href="../Assets/CSS/mainResponsive.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+
 <body>
 
-<div id="header-top-block">
+    <div id="header-top-block">
 
-    <?php if(\models\User::CheckUserActivity() == true):?>
-        <div class="header-top-block-controls">
-        <a href="/logout"><span class="header-top-block-controls-item">Logout <span class="material-icons" title="edit record">logout</span></span></a>
-        </div>
-    <?php endif;?>
+        <?php if (\Model\User::CheckUserActivity()) : ?>
+            <div class="header-top-block-controls">
+                <a href="/logout"><span class="header-top-block-controls-item">Logout <span class="material-icons" title="edit record">logout</span></span></a>
+            </div>
+        <?php endif; ?>
 
-    <h1>Krudo app</h1>
-    <strong id="header-h1">A nano framework</strong>
-
-
-
-</div>
-
-<!-- Main Content Block - START-->
-<div id="main-content-block">
+        <h1>Krudo app</h1>
+        <strong id="header-h1">A nano framework</strong>
 
 
 
+    </div>
 
+    <!-- Main Content Block - START-->
+    <div id="main-content-block">
