@@ -232,10 +232,11 @@ class Router
             if (class_exists("\\" . self::$MainFolderPathNames["controller"] . "\\" . $this->Routes[$pathName]["routerClass"])) {
                 return $this->Routes[$pathName]["routerClass"];
             } else {
-                throw new Exception("Demanded controller class is not existing: " . $this->Routes[$pathName]["routerClass"]);
+                throw new \Exceptions\RouteControllerException($this->Routes[$pathName]["routerClass"]);
             }
         }
         return $this->Routes["404"]["routerClass"];
+
     }
 
     /**
@@ -255,39 +256,46 @@ class Router
     }
 
     /**
-     * Provide content of particular controller with its views/view by controller settings
+     * Provide content of particular controller with its views/view controller settings and model by request
      * 
      * @param string $controllerClassName
      * @return void
      */
     public function provideContent(string $controllerClassName)
     {
+        // Preparing folders to check Model Controller and Model classes
         $controllerClass = "\\" . self::$MainFolderPathNames["controller"] . "\\" . $controllerClassName;
         $modelControllerClass = "\\" . self::$MainFolderPathNames["model"] . "\\" . $controllerClassName;
-        if (class_exists($modelControllerClass)) {
+        $viewTemplate = self::$MainFolderPathNames["view"] . "\\" . $controllerClassName . ".phtml";
 
+        // Check if current Controller name exists in Model folder to provide common data
+        if (class_exists($modelControllerClass)) {
+            // Check if provided ID from request is expected for this route
             if(!is_null($ID = $this->getExpectedRequestValueByKey("GET", "ID"))){
+                // Creating instance of relevant model with added obtained ID from request
                 $modelControllerClassInstance = $modelControllerClass::getInstance($ID);
             }else{
+                // Creating instance of relevant model without any ID
                 $modelControllerClassInstance = $modelControllerClass::getInstance();
             }
-            // if (array_key_exists("GET", $expectedKeys) && array_key_exists("ID", $expectedKeys["GET"]) && !is_null($ID = $expectedKeys["GET"]["ID"])) {
-            //     $modelControllerClassInstance = $modelControllerClass::getInstance($ID);
-            // } else {
-            //     $modelControllerClassInstance = $modelControllerClass::getInstance();
-            // }
+            // Creating new Controller instance with particular model as DI
             $this->Controller = new $controllerClass($modelControllerClassInstance);
-        } else {
+        }else{
+            // No Model for particular Controller was found - creating just new Controller instance
             $this->Controller = new $controllerClass();
         }
 
+        // Provide constant header for provided content Controller
         require(self::$ViewParts["Header"]);
+        // Check which ViewType settings current Controller has - showing template
         if ($controllerClass::$ViewType == "template") {
-            require(self::$MainFolderPathNames["view"] . "\\" . $controllerClassName . ".phtml");
+            require($viewTemplate);
         }
+        // Check which ViewType settings current Controller has - showing method html without template
         if ($controllerClass::$ViewType == "controller") {
             echo $this->Controller->controllerView();
         }
+        // Provide constant header for provided content Controller
         require(self::$ViewParts["Footer"]);
     }
 }
