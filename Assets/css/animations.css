@@ -22,21 +22,39 @@
         }
     }
 
+    @keyframes slideInBottom {
+        0% {
+            transform: translateY(15%);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
     @keyframes loadBackgroundBody{
         0% {
             background-position: 0% 25%;
         }
-        50% {
+        15% {
             background-position: 25% 50%;
         }
-        50% {
+        30% {
             background-position: 50% 75%;
         }
-        50% {
+        45% {
             background-position: 100% 75%;
         }
+        60% {
+             background-position: 75% 50%;
+         }
+        75% {
+            background-position: 50% 25%;
+        }
+        90% {
+            background-position: 25% 0%;
+        }
         100% {
-            background-position: 0% 75%;
+            background-position: 0% 25%;
         }
     }
 
