@@ -19,13 +19,13 @@ A basic pure OOP PHP MVP nano framework application for product management.
 4. Create and set file appConfiguration.php (where the index.php is) to name app constants correctly for routing and MySQL DB connection:
     ```
     <?php
-    define("APP_ROOT", "/KRUDO");
-
-    define("APP_DB_NAME", "dbname");
-    define("APP_DB_USER", "admin");
-    define("APP_DB_PASSWORD", "admin");
-    define("APP_DB_PORT", "3309");
-    define("APP_DB_ADDRESS", "127.0.0.1");
+    const APP_ROOT = "/KRUDO";
+    
+    const APP_DB_NAME = "krudo";
+    const APP_DB_USER = "root";
+    const APP_DB_PASSWORD = "123321";
+    const APP_DB_PORT = "3309";
+    const APP_DB_ADDRESS = "127.0.0.1";
     ```
 
 5. Import database structure from provided file: krudo_sql_structure.sql
