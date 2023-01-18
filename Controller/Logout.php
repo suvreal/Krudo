@@ -5,7 +5,7 @@ namespace controller;
 /**
  * Controller class which is supposed to log off user
  */
-class Logout extends Router
+final class Logout extends Controller
 {
 
     /**

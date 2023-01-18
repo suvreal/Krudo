@@ -3,9 +3,10 @@
    ========================================================================== */
 
     table {
-        width: 75%;
+        width: calc(75% - 50px);
         text-align: center;
-        margin: auto;
+        margin: auto auto 100px auto;
+        overflow-x: auto;
     }
 
     tr:first-child{

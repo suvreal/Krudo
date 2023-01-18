@@ -10,7 +10,8 @@ use mysqli_sql_exception;
 /**
  * Provides database connection to MySQL database
  */
-Class MySQLConnection{
+Class MySQLConnection
+{
 
     /**
      * @var $Instance

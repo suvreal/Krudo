@@ -1,6 +1,27 @@
 
 
 <!-- Box headers - START -->
-<h2>404 page not found</h2>
+<h2><span class="material-icons" title="search records">mood_bad</span>404 page not found</h2>
 <!-- Box headers - END -->
+
+
+<!-- Box contents - START -->
+<div class="page-content-container">
+    <h3>Searched route is not existing</h3>
+    <p>Try to create new route or look at already existing route</p>
+
+    <strong>List of existing routes:</strong>
+    <?php if($this->Routes):?>
+        <ul>
+        <?php foreach($this->Routes as $keyRoute => $routeVal): ?>
+            <li>
+                <a href="/<?php echo($keyRoute); ?>">
+                    <?php echo($routeVal["routerClass"]);?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+        </ul>
+    <?php endif;?>
+</div>
+<!-- Box contents - END -->
 

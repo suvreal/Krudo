@@ -5,7 +5,7 @@ namespace controller;
 /**
  * Controller class which is supposed to show quick information about application
  */
-class About extends Router
+final class About extends Controller
 {
 
     /**
@@ -48,9 +48,12 @@ class About extends Router
     public function controllerView(): string
     {
         return(<<<EOT
+        <div class="page-content-container">
         <h2>This is my app</h2>
         <br/>
         <p>Welcome and be my guest</p>
+        <p>This is page about this app</p>
+        </div>
         EOT);
     }
 }

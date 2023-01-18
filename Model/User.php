@@ -71,7 +71,7 @@ class User extends Model
      * 
      * @return bool
      */
-    public static function CheckUserActivity()
+    public static function CheckUserActivity(): bool
     {
         return isset($_COOKIE["UserAuthenticatedKrudo"]);
     }
@@ -82,7 +82,7 @@ class User extends Model
      * 
      * @return bool|null
      */
-    public static function DeAuthenticate()
+    public static function DeAuthenticate(): ?bool
     {
         if (isset($_COOKIE["UserAuthenticatedKrudo"])) {
             unset($_COOKIE["UserAuthenticatedKrudo"]);

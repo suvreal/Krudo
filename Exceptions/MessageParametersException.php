@@ -5,13 +5,13 @@ Namespace Exceptions;
 Use Exception;
 
 /**
- * Route Exception class to provide more information about MySQL Connection errors
+ * Message Exception class to provide more information about message components error
  */
-Class MySQLConnectionException extends Exception
+Class MessageParametersException extends Exception
 {
 
     /**
-     * Returns MySQLConnectionException error message
+     * Returns Message components error message
      *
      * @return string
      */
@@ -19,9 +19,10 @@ Class MySQLConnectionException extends Exception
     {
         echo("<pre>");
         $exceptionText = <<<EOT
-          Connection is not available or set 
-          - Check appConfiguration.php for database access settings
-          - Check availability of MySQL database server
+        Component Message parameters has not been set properly:
+        - Message type
+        - Message title = text
+        - Message text = body
         EOT;
         echo($exceptionText);
         return 'Error - line '.$this->getLine().' in '.$this->getFile()

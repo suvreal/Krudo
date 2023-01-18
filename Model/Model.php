@@ -40,6 +40,29 @@ class Model
     }
 
     /**
+     * Checker for record by id and model
+     *
+     * @param int $id
+     * @return bool
+     */
+    public static function doesRecordExists(int $id): bool
+    {
+        $record = self::BuildQueryByModel(
+            "*",
+            "LIMIT 1",
+            "ID = ?",
+            "i",
+            array($id)
+        );
+
+        if(!is_null($record) && $record[0]->getId() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Singleton instance obtain
      *
      * @param ?int $IDModel
@@ -132,7 +155,7 @@ class Model
     {
         $calledClass = new ReflectionClass(get_called_class());
         if (class_exists($calledClass->name)) {
-            return implode("", array_values($calledClass->getStaticProperties())); // TODO: https://www.php.net/manual/en/function.str-repeat.php
+            return implode("", array_values($calledClass->getStaticProperties()));
         }
         return null;
     }
@@ -163,8 +186,6 @@ class Model
         if (is_null($table = self::getModelTableName())) {
             return null;
         }
-
-        // TODO: 172-176 very duplicity through this doc
         $connection = MySQLConnection::getDatabaseConnection();
         $statement = $connection->prepare("SELECT * FROM $table WHERE ID = ? LIMIT 1");
         $statement->bind_param('i', $ID);

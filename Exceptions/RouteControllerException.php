@@ -7,9 +7,17 @@ Use Exception;
 /**
  * Route Exception class to provide more information about route and controller errors
  */
-Class RouteControllerException extends Exception {
+Class RouteControllerException extends Exception
+{
 
-    public function __construct(string $routerClassTest){
+    /**
+     * Provides route error message
+     *
+     * @param string $routerClassTest
+     * @return string
+     */
+    public function errorMessage(string $routerClassTest): string
+    {
         echo("<pre>");
         $exceptionText = <<<EOT
           Route is not available or set 

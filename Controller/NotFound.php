@@ -5,7 +5,7 @@ namespace controller;
 /**
  * Controller class which is result of undefined route by URL path name
  */
-class NotFound extends Router
+final class NotFound extends Controller
 {
 
     /**

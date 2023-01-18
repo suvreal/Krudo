@@ -9,12 +9,8 @@
 
 
 <!-- Result message - START -->
-<?php if (!is_null($this->Controller->ResultMessageState)) : ?>
-    <div class="user-message">
-        <span class="material-icons" title="add new product">warning</span>
-        <h3 class="user-message-title"><?php echo ($this->Controller->ResultMessage["title"]); ?></h3>
-        <span class="user-message-content"><?php echo ($this->Controller->ResultMessage["content"]); ?></span>
-    </div>
+<?php if (!is_null($this->Controller->ResultMessage)) : ?>
+    <?php echo($this->Controller->getComponent("Message", array("warning", "Wrong user credentials", "Try different email or password"))); ?>
 <?php endif; ?>
 <!-- Result message - END -->
 

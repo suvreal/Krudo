@@ -2,7 +2,8 @@
 
 namespace controller;
 
-Class ProductRemove extends Router{
+final Class ProductRemove extends Controller
+{
     
 
     /**
@@ -34,6 +35,13 @@ Class ProductRemove extends Router{
     public function __construct()
     {
         if (isset($_GET["ID"])) {
+            try {
+                if (!\Model\Product::doesRecordExists($_GET["ID"])){
+                    throw new \Exceptions\UserDeletionIDNull();
+                }
+            }catch(\Exceptions\UserDeletionIDNull $e){
+                echo("Message: ". $e->errorMessage($_GET["ID"]));
+            }
             if (\Model\Product::getInstance(intval($_GET["ID"]))->DeleteRecord()) {
                 Router::routeHeader("/products");
             } else {
@@ -41,6 +49,8 @@ Class ProductRemove extends Router{
                 $this->ResultMessage["title"] = "Error occurred while deletion";
                 $this->ResultMessage["content"] = "Try operation later or contact administrator";
             }
+        }else{
+            Router::routeHeader("/products");
         }
     }
     
@@ -54,8 +64,9 @@ Class ProductRemove extends Router{
         if (!is_null($this->ResultMessageState)){
             return(<<<EOT
             <div class="user-message">
-                <h3 class="user-message-title"> {$this->Controller->ResultMessage['title']} </h3>
-                <span class="user-message-content"> {$this->Controller->ResultMessage['content']} </span>
+                <span class="material-icons" title="add new product">warning</span>
+                <h3 class="user-message-title"> {$this->ResultMessage['title']} </h3>
+                <span class="user-message-content"> {$this->ResultMessage['content']} </span>
             </div>
             EOT);    
         }

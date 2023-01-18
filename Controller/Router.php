@@ -3,6 +3,7 @@
 namespace controller;
 
 use Exception;
+use Exceptions\RouteControllerException;
 
 /**
  * Router class for providing routes according to URL path params or path names
@@ -72,6 +73,24 @@ class Router
     }
 
     /**
+     * Initializes Router
+     *
+     * @return void
+     * @throws Exception
+     */
+    public static function Route(): void
+    {
+        if (array_key_exists("PATH_INFO", $_SERVER)) {
+            if ($ProcessedURL = explode("/", $_SERVER["PATH_INFO"])[1]) {
+                (new \Controller\Router())->performRoute($ProcessedURL);
+            }
+        }
+        if (!array_key_exists("PATH_INFO", $_SERVER)) {
+            (new \Controller\Router())->performRoute("products");
+        }
+    }
+
+    /**
      * @param string $urlPath
      * @return void
      */
@@ -93,6 +112,7 @@ class Router
         $this->provideContent($this->getRouteValue($this->PathName));
     }
 
+    // TODO: add exception
     /**
      * Obtains routes configuration
      * Getter for @property $Routes
@@ -123,7 +143,7 @@ class Router
     /**
      * Obtains allowed request keys according to POST and GET values
      * 
-     * @param string $requestType as mainkey of ExpectedRequestKeys array
+     * @param string $requestType as main key of ExpectedRequestKeys array
      * @param string $key of ExpectedRequestKeys array
      *
      * @return string
@@ -229,10 +249,14 @@ class Router
     public function getRouteValue(string $pathName): ?string
     {
         if (array_key_exists($pathName, $this->Routes)) {
-            if (class_exists("\\" . self::$MainFolderPathNames["controller"] . "\\" . $this->Routes[$pathName]["routerClass"])) {
-                return $this->Routes[$pathName]["routerClass"];
-            } else {
-                throw new \Exceptions\RouteControllerException($this->Routes[$pathName]["routerClass"]);
+            try {
+                if (class_exists("\\" . self::$MainFolderPathNames["controller"] . "\\" . $this->Routes[$pathName]["routerClass"])) {
+                    return $this->Routes[$pathName]["routerClass"];
+                } else {
+                    throw new RouteControllerException();
+                }
+            }catch(RouteControllerException $e){
+                echo("Message: ". $e->errorMessage($this->Routes[$pathName]["routerClass"]));
             }
         }
         return $this->Routes["404"]["routerClass"];
@@ -263,11 +287,12 @@ class Router
      */
     public function provideContent(string $controllerClassName)
     {
-        // Preparing folders to check Model Controller and Model classes
+        // Prepare folders to check Controller and Model classes with Views
         $controllerClass = "\\" . self::$MainFolderPathNames["controller"] . "\\" . $controllerClassName;
         $modelControllerClass = "\\" . self::$MainFolderPathNames["model"] . "\\" . $controllerClassName;
         $viewTemplate = self::$MainFolderPathNames["view"] . "\\" . $controllerClassName . ".phtml";
 
+        // Get possible model for particular controller
         // Check if current Controller name exists in Model folder to provide common data
         if (class_exists($modelControllerClass)) {
             // Check if provided ID from request is expected for this route
@@ -285,6 +310,7 @@ class Router
             $this->Controller = new $controllerClass();
         }
 
+        // Complete whole return page of all additions
         // Provide constant header for provided content Controller
         require(self::$ViewParts["Header"]);
         // Check which ViewType settings current Controller has - showing template

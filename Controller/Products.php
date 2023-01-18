@@ -5,7 +5,7 @@ namespace controller;
 /**
  * Controller class which is result of undefined route by URL path name
  */
-class Products extends Router
+final class Products extends Controller
 {
 
     /**

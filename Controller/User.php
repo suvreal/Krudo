@@ -5,7 +5,7 @@ namespace controller;
 /**
  * Controller class which is result of undefined route by URL path name
  */
-class User extends Router
+final class User extends Controller
 {
 
     /**
@@ -33,24 +33,16 @@ class User extends Router
      * User result message
      * 
      * @property $ResultMessage
-     * @property $ResultMessageState
      */
-    public $ResultMessage = array(
-        "title" => "",
-        "content" => ""
-    );
-    public $ResultMessageState = NULL;
+    public $ResultMessage = null;
 
     public function __construct(\Model\User $User = null)
     {
         $this->User = $User;
-
         if (\Model\User::CheckUserActivity()) {
             Router::routeHeader("/products");
         }
-
         $this->processAuthentication();
-
     }
 
     /**
@@ -62,9 +54,7 @@ class User extends Router
                 $this->User->Authenticate();
                 Router::routeHeader("/products");
             } else {
-                $this->ResultMessageState = TRUE;
-                $this->ResultMessage["title"] = "Wrong user credentials";
-                $this->ResultMessage["content"] = "Try different email or password";
+                $this->ResultMessage = true;
             }
         }
     }
