@@ -56,3 +56,25 @@
         animation: 1s ease-in loadListItems
     }
 
+    .user-message{
+        text-align: center;
+        background-color: white;
+        padding: 25px 0;
+        box-shadow: 0 2px 6px #afafaf;
+        margin: 50px 0 20px 0;
+    }
+
+    .general-return-upper-block{
+        text-align: center;
+        background-color: #f1f1f1;
+        padding: 25px 0;
+    }
+
+    .general-return-upper-block a{
+        color: #7118dc;
+    }
+
+    .general-return-upper-block a:hover{
+        color: #186ddc;
+    }
+

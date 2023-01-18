@@ -34,7 +34,7 @@
 
     #auth-content-block {
         background-color: white;
-        padding: 25px 5px;
+        padding: 25px 0;
         width: calc(75% - 10px);
         margin: auto;
         min-height: 450px;
@@ -44,7 +44,7 @@
 
     #main-content-block {
         background-color: white;
-        padding: 25px 5px;
+        padding: 25px 0;
         width: calc(95% - 10px);
         margin: auto;
         min-height: calc(100% - 300px);

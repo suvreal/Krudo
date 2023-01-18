@@ -30,31 +30,28 @@
         font-size: 16px;
         box-shadow: 0 1px 3px #d2d2d212;
         border-radius: 30px;
-        border-top: none;
-        border-left: none;
-        border-right: none;
+        border: none;
         background-color: #e8e8e8;
-        /*outline: 5px solid rgba(24, 109, 220, 0.09);*/
-    }
+}
 
-    #login-form input[type=email]:not(:placeholder-shown),
-    #login-form input[type=password]:not(:placeholder-shown),
-    #login-form input[type=email]:focus,
-    #login-form input[type=password]:focus {
-        outline: 5px solid #3106630f;
-        color: #7118dc;
-        background-color: #e8e8e80f;
-    }
+#login-form input[type=email]:not(:placeholder-shown),
+#login-form input[type=password]:not(:placeholder-shown),
+#login-form input[type=email]:focus,
+#login-form input[type=password]:focus {
+    outline: 5px solid #3106630f;
+    color: #7118dc;
+    background-color: #e8e8e80f;
+}
 
-    #login-form input[type=email]:placeholder-shown,
-    #login-form input[type=password]:placeholder-shown {
-        color: #141414;
-    }
-
+#login-form input[type=email]:placeholder-shown,
+#login-form input[type=password]:placeholder-shown {
+    color: #141414;
+}
 
 
-    /* Product update & create form
-    ==========================================================================*/
+
+/* Product update & create form
+==========================================================================*/
 
     #product-form {
         margin: auto;
@@ -73,9 +70,7 @@
         font-size: 16px;
         box-shadow: 0 1px 3px #d2d2d212;
         border-radius: 30px;
-        border-top: none;
-        border-left: none;
-        border-right: none;
+        border: none;
         background-color: #e8e8e8;
     }
 
@@ -108,9 +103,7 @@
         font-size: 16px;
         box-shadow: 0 1px 3px #d2d2d212;
         border-radius: 30px;
-        border-top: none;
-        border-left: none;
-        border-right: none;
+        border:none;
         background-color: #e8e8e8;
         text-align: center;
     }

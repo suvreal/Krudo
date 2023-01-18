@@ -146,7 +146,7 @@ class User extends Model
             array($email)
         );
 
-        if (is_null($product) && $product[0]->getId() <= 0) {
+        if (is_null($product) || $product[0]->getId() <= 0) {
             return false;
         }
 

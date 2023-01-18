@@ -60,3 +60,9 @@
         outline: 5px solid #7118dc36;
         background-color: #7118dc;
     }
+
+    a button#add-product{
+        width: 200px !important;
+        display: block  !important;
+        margin: auto !important;
+    }
