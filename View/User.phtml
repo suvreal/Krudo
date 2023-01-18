@@ -1,20 +1,30 @@
-<h2 class="center">User authentication</h2>
 
+
+<!-- Box headers - START -->
+<h1 id="app-logo">Krudo</h1>
+<h2 class="center">User authentication</h2>
+<p class="basic-block-paragraph">Dear user, welcome to Krudo, feel free to perform login below
+</p>
+<!-- Box headers - END -->
+
+
+<!-- Result message - START -->
 <?php if (!is_null($this->Controller->ResultMessageState)) : ?>
     <div class="user-message">
         <h3 class="user-message-title"><?php echo ($this->Controller->ResultMessage["title"]); ?></h3>
         <span class="user-message-content"><?php echo ($this->Controller->ResultMessage["content"]); ?></span>
     </div>
 <?php endif; ?>
+<!-- Result message - END -->
 
+
+<!-- Login form - START -->
 <form action="/login" method="post" id="login-form">
-
     <label for="userEmail">Email:</label>
-    <input id="userEmail" name="userEmail" type="email" placeholder="test@email.cz" required>
-
-    <label for="userPassword">Heslo:</label>
-    <input id="userPassword" name="userPassword" type="password" placeholder="password" required>
-
-    <button>Log in</button>
-
+    <input id="userEmail" name="userEmail" class="form-input" type="email" placeholder="test@email.cz" required>
+    <label for="userPassword">Password:</label>
+    <input id="userPassword" name="userPassword" class="form-input" type="password" placeholder="password" required>
+    <button id="login-submit" title="Log in to Krudo">Log in</button>
 </form>
+<!-- Login form - END -->
+

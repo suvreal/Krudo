@@ -5,7 +5,7 @@ Namespace Exceptions;
 Use Exception;
 
 /**
- * Route Exception class to provide more information about model interaction errors
+ * Route Exception class to provide more information about route and controller errors
  */
 Class RouteControllerException extends Exception {
 

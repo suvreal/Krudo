@@ -1,0 +1,37 @@
+/* ==========================================================================
+   Tables CSS assets
+   ========================================================================== */
+
+    table {
+        width: 75%;
+        text-align: center;
+        margin: auto;
+    }
+
+    tr:first-child{
+        box-shadow:none;
+    }
+
+    table th {
+        padding: 20px;
+    }
+
+    table td {
+        padding: 25px;
+    }
+
+    td a span {
+        color: #186ddc;
+    }
+
+    td.data-list-item-element a span.material-icons {
+        color: #186ddc;
+    }
+
+    td.data-list-item-element a span.material-icons:hover {
+        color: #7118dc;
+    }
+
+    tr.data-list-item {
+        transition: 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }

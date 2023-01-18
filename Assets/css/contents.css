@@ -1,0 +1,79 @@
+/* ==========================================================================
+   Content CSS assets
+   ========================================================================== */
+
+    /* Main content blocks
+    ==========================================================================*/
+
+    span.header-top-block-controls-item span.material-icons {
+        top: 4px;
+        position: relative;
+    }
+
+    #header-top-block {
+        display: block;
+        text-align: center;
+        background-color: transparent;
+        width: auto;
+        padding: 50px 0 50px 0;
+    }
+
+    .main-content-record,
+    .searched-products-record {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
+        border-radius: 3px;
+        height: auto;
+    }
+
+    .main-content-record:not(:first-of-type):hover,
+    .searched-products-record:not(:first-of-type):hover {
+        cursor: pointer;
+        outline: 5px solid #7118dc36;
+    }
+
+    #auth-content-block {
+        background-color: white;
+        padding: 25px 5px;
+        width: calc(75% - 10px);
+        margin: auto;
+        min-height: 450px;
+        border-radius: 20px;
+        box-shadow: 0 2px 6px #21212169;
+    }
+
+    #main-content-block {
+        background-color: white;
+        padding: 25px 5px;
+        width: calc(95% - 10px);
+        margin: auto;
+        min-height: calc(100% - 300px);
+        border-radius: 20px;
+        box-shadow: 0 2px 6px #21212169;
+    }
+
+    #main-content-block:hover{
+        box-shadow:0 1px 20px #21212169;
+    }
+
+    #footer-block {
+        display: block;
+        text-align: center;
+        background-color: transparent;
+        width: auto;
+        padding: 50px 0 50px 0;
+    }
+
+    .middle-text-footer strong a,
+    span.header-top-block-controls-item {
+        color: white;
+        text-decoration: underline;
+    }
+
+    span.header-top-block-controls-item {
+        font-weight: 700;
+    }
+
+
+
+

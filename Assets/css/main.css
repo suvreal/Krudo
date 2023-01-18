@@ -1,12 +1,27 @@
+/* ===========================================  ===============================
+   General CSS assets
+   ========================================================================== */
+
     body {
-        background-color: rgb(233, 233, 233);
+        background: #186ddc;
+        background: -webkit-linear-gradient(230deg, #186ddc 0%, #7118dc 100%);
+        background: linear-gradient(230deg, #186ddc 0%, #3d3fd5 25%, #9615e0 75%, #7118dc 100%);
         font-family: sans-serif;
+        height: 100vh;
+        transition: 0.99s all cubic-bezier(0.165, 0.84, 0.44, 1);
+        background-size: 400% 400%;
     }
-    
-    a {
-        text-decoration: none;
+
+    *{
+        transition:all 0.25s ease-in-out;
     }
-    
+
+    #main-logo{
+
+    }
+
+    /* Use case CSS classes
+    ==========================================================================*/
     .center {
         text-align: center;
     }
@@ -15,276 +30,29 @@
         color: black;
     }
     
-    a:link {}
-    
-    a:visited {}
-    
-    a:hover {}
-    
-    a:active {}
-    
     .display-none {
         display: none !important;
     }
-    
-    table {
-        width: 100%;
-        text-align: center;
+
+    /* Animations assignments
+    ==========================================================================*/
+    form input:nth-of-type(2n+1) {
+        animation: 1s ease-out 0s 1 slideInLeft;
     }
-    
-    table th {
-        padding: 20px;
+
+    form input:nth-of-type(2n) {
+        animation: 1s ease-out 0s 1 slideInRight;
     }
-    
-    table td {
-        padding: 25px;
+
+    body{
+        animation: loadBackgroundBody 20s ease-in infinite;
     }
-    
-    td a span {
-        color: #186ddc;
+
+    .products-box:nth-of-type(2n+1){
+        animation: 0.5s ease-in loadListItems
     }
-    
-    td.data-list-item-element a span.material-icons {
-        color: #186ddc;
+
+    .products-box:nth-of-type(2n){
+        animation: 1s ease-in loadListItems
     }
-    
-    td.data-list-item-element a span.material-icons:hover {
-        color: #7118dc;
-    }
-    
-    tr.data-list-item {
-        transition: 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
-    }
-    
-    #searchInput {
-        width: calc(100% - 11px);
-        height: 40px;
-        padding: 5px;
-        border: none;
-        outline: 3px solid #186ddc;
-        border-radius: 2px;
-        font-size: 16px;
-        color: #186ddc8f;
-        font-weight: 900;
-        transition: 0.55s cubic-bezier(0.075, 0.82, 0.165, 1);
-    }
-    
-    #searchInput:not(:placeholder-shown) {
-        outline: 3px solid #7118dc;
-        color: #7118dc8f;
-    }
-    
-    #searchInput:placeholder-shown {
-        outline: 3px solid #186ddc;
-        color: #186ddc8f;
-    }
-    
-    #searchInput:focus {
-        outline: 3px solid #7118dc;
-        color: #7118dc8f;
-    }
-    
-    h1 {
-        color: #186ddc;
-    }
-    
-    #header-h1 {
-        color: #074393;
-        position: relative;
-        top: -27px;
-        font-size: 14px;
-    }
-    
-    h2 {
-        color: #7118dc;
-    }
-    
-    h1 .material-icons,
-    h2 .material-icons,
-    h3 .material-icons,
-    button .material-icons {
-        position: relative;
-        top: 4px;
-    }
-    
-    span.header-top-block-controls-item span.material-icons {
-        top: 4px;
-        position: relative;
-    }
-    
-    #header-top-block {
-        display: block;
-        text-align: center;
-        background-color: transparent;
-        width: auto;
-    }
-    
-    .main-content-record,
-    .searched-products-record {
-        background-color: white;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.22);
-        border-radius: 3px;
-        height: auto;
-    }
-    
-    .main-content-record:not(:first-of-type):hover,
-    .searched-products-record:not(:first-of-type):hover {
-        position: relative;
-        z-index: 999;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.22);
-        outline: 2px solid #7118dc;
-    }
-    
-    #main-content-block {
-        background-color: transparent;
-        padding: 25px 5px 50px 5px;
-        width: calc(75% - 10px);
-        margin: auto;
-        min-height: 450px;
-    }
-    
-    #footer-block {
-        display: block;
-        text-align: center;
-        background-color: transparent;
-        width: auto;
-        padding: 50px 0px 50px 0px;
-    }
-    
-    .middle-text-footer strong a,
-    span.header-top-block-controls-item {
-        color: #7118dc;
-    }
-    
-    span.header-top-block-controls-item {
-        font-weight: 700;
-    }
-    
-    #login-form {
-        margin: auto;
-        width: 375px;
-        height: auto;
-        background-color: white;
-        border-radius: 3px;
-        box-shadow: 0px 2px 6px #00000029;
-        border-bottom: 15px solid #fbfbfb;
-        border-top: 15px solid whitesmoke;
-        border-left: 15px solid #f5f5f5c7;
-        border-right: 15px solid #f7f7f78c;
-        padding: 15px;
-    }
-    
-    label {
-        color: #7118dc;
-        font-size: 16px;
-        font-weight: 700;
-        margin: auto;
-        display: table;
-    }
-    
-    #login-form input[type=email],
-    #login-form input[type=password] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
-        border-radius: 2px;
-        font-size: 16px;
-        border: none;
-        outline: 3px solid #186ddc;
-        color: #186ddc8f;
-    }
-    
-    #login-form input[type=email]:not(:placeholder-shown),
-    #login-form input[type=password]:not(:placeholder-shown) {
-        outline: 3px solid #7118dc;
-        color: #7118dc8f;
-    }
-    
-    #login-form input[type=email]:placeholder-shown,
-    #login-form input[type=password]:placeholder-shown {
-        outline: 3px solid #186ddc;
-        color: #186ddc8f;
-    }
-    
-    #login-form input[type=email]:focus,
-    #login-form input[type=password]:focus {
-        outline: 3px solid #7118dc;
-        color: #7118dc8f;
-    }
-    
-    button {
-        margin: auto;
-        display: block;
-        border-radius: 2px;
-        background-color: #7118dc;
-        border: none;
-        font-size: 15px;
-        box-shadow: 0px 2px 6px #00000014;
-        color: white;
-        padding: 17px;
-        font-weight: 700;
-        transition: 0.33s cubic-bezier(0.075, 0.82, 0.165, 1);
-        margin-top: 25px;
-    }
-    
-    button:hover {
-        cursor: pointer;
-        background-color: #186ddc;
-    }
-    
-    button#add-product {
-        background-color: transparent;
-        box-shadow: none;
-        color: #7118dc;
-        margin-top: unset;
-        font-size: 18px;
-        margin: unset;
-    }
-    
-    button#add-product:hover {
-        cursor: pointer;
-        background-color: transparent;
-        color: #186ddc;
-    }
-    
-    #product-form {
-        margin: auto;
-        width: 475px;
-        height: auto;
-        background-color: white;
-        border-radius: 3px;
-        box-shadow: 0px 2px 6px #00000029;
-        border-bottom: 15px solid #fbfbfb;
-        border-top: 15px solid whitesmoke;
-        border-left: 15px solid #f5f5f5c7;
-        border-right: 15px solid #f7f7f78c;
-        padding: 15px;
-    }
-    
-    #product-form input {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
-        border-radius: 2px;
-        font-size: 16px;
-        border: none;
-        outline: 3px solid #186ddc;
-        color: #186ddc8f;
-    }
-    
-    #product-form input[type=text]:not(:placeholder-shown) {
-        outline: 3px solid #7118dc;
-        color: #7118dc8f;
-    }
-    
-    #product-form input[type=text]:placeholder-shown {
-        outline: 3px solid #186ddc;
-        color: #186ddc8f;
-    }
-    
-    #product-form input[type=text]:focus {
-        outline: 3px solid #7118dc;
-        color: #7118dc8f;
-    }
+

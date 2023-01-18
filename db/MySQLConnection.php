@@ -3,7 +3,9 @@
 namespace db;
 
 use Exception;
+use Exceptions\MySQLConnectionException;
 use mysqli;
+use mysqli_sql_exception;
 
 /**
  * Provides database connection to MySQL database
@@ -54,14 +56,17 @@ Class MySQLConnection{
     public static function performDatabaseConnection(): ?MySQLConnection
     {
         $MySQLConnection = self::getInstance();
-        $MySQLConnection->DatabaseConnection = new mysqli(
-            constant("APP_DB_ADDRESS"), 
-            constant("APP_DB_USER"), 
-            constant("APP_DB_PASSWORD"),
-            constant("APP_DB_NAME"),
-            constant("APP_DB_PORT")
-        );
-
+        try{
+            $MySQLConnection->DatabaseConnection = new mysqli(
+                constant("APP_DB_ADDRESS"),
+                constant("APP_DB_USER"),
+                constant("APP_DB_PASSWORD"),
+                constant("APP_DB_NAME"),
+                constant("APP_DB_PORT")
+            );
+        }catch(mysqli_sql_exception $e){
+            echo (new MySQLConnectionException())->errorMessage();
+        }
         return $MySQLConnection;
     }
 

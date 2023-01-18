@@ -33,16 +33,9 @@ class Logout extends Router
      */
     public function controllerView(): string
     {
-        if (!\Model\User::CheckUserActivity()) {
-            $viewData = "<h2>User is not logged in</h2>";
-            $viewData .= "<a href='/login'> -- Eventually go to login</a>";
-            return $viewData;
+        if (\Model\User::CheckUserActivity()) {
+            \Model\User::DeAuthenticate();
         }
-
-        \Model\User::DeAuthenticate();
-        $viewData = "<h2>Logout successful</h2>";
-        $viewData .= "<a href='/login'> -- Eventually go back to login</a>";
-        return $viewData;
-
+        Router::routeHeader("/login");
     }
 }

@@ -298,4 +298,5 @@ class Router
         // Provide constant header for provided content Controller
         require(self::$ViewParts["Footer"]);
     }
+
 }

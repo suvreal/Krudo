@@ -2,13 +2,13 @@
 A basic pure OOP PHP MVP nano framework application for product management.
 - PHP 8
 - Made with fun and love
-- dev version 0.33
+- dev version 0.4
 - feedback appreciated
 - development but functional version
 
 ## Features:
 - CRUD (administration) of product data
-- Authentification and user settings
+- Authentication
 - Asynchronous search of product
 - Browser responsive and compatible
 
@@ -44,25 +44,29 @@ Generally there is important to clone and paste root of app into adequate folder
 4. Paste root of this repository into running webserver
 5. Application is ready to use - perform login to manage products
 
-## Further work:
+## Further possible work:
 1. Other FSOP features: filter-ing, improved search-ing, order-ing, page-inating 
 2. User role system (users and roles, roles, entity authorization role setting)
-3. Multiple content entites as for small CMS or E-commerce solution
+3. Multiple content entites
 4. Multiple languages
 5. Multiple currencies and VATs
 6. Taxonomy and tags
 7. Dynamic blocks and element ordering for homepages and pages
 8. Installation process for user access
 9. Provide status messages
-10. Activity logss
+10. Activity logs
 11. Additional product content: image, gallery, parameters, browse metadata, currency, value added tax
 12. Content writeout for external non-admin use
-13. Submit & request submit handling (source of route, ID-HASH for route key value)
+
+## Short term TODO:
+- improve routing for methods and request parameters and controller interaction
+- improve request processing
+- unit tests
+- improve search
 
 ## User test access:
 - name: admin@krudo.cz
-- password: 6546544fdasdf 
- 
+- password: 6546544fdasdf
  
 ## Routes example
 Example of definition of route for in file routesConfiguration.php in root folder:
@@ -79,9 +83,7 @@ Example of definition of route for in file routesConfiguration.php in root folde
 - routerClass is supposed to be set with valid ClassName of Controller namespace
   - routeClass name is compared in model and view namespaces to get proper view or model
 - requestKeys are expected URL params matching DB attributes to process (save, update, delete, visit)
-- more work will continue to improve request processing according to POST request keys as for update or insert to 
-be better matched with Model attributes
-- called method for particular route will be added
+
 
 ## Database:
 - database export for implementation & test purposes provided in root directory with name krudo_database.sql - name of database is krudo

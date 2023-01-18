@@ -1,4 +1,4 @@
-@media only screen and (min-width: 300px) and (max-width: 500px) {
+@media only screen and (min-width: 200px) and (max-width: 500px) {
     h1,
     h2,
     h3,
@@ -18,12 +18,16 @@
     #searchInput {
         text-align: center;
     }
+    #login-form,
     #product-form {
         margin: auto;
-        width: auto;
+        width: auto !important;
+        background-color:transparent !important;
     }
-    #login-form {
-        margin: auto;
-        width: auto;
+
+    th:nth-of-type(2),
+    td:nth-of-type(2) {
+        display:none;
     }
+
 }

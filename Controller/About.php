@@ -27,6 +27,20 @@ class About extends Router
     }
 
     /**
+     * Provides addition to document's head tag
+     *
+     * @return string
+     */
+    public static function provideHeaderControllerAddition(): string
+    {
+        return(<<<EOT
+        <meta name="keywords" content="Krudo, krucial done, tiny MVP framework">
+        <meta name="description" content="Krudo krucial done">
+        <meta name="author" content="Bartoloměj Eliáš">
+        EOT);
+    }
+
+    /**
      * Controller view method by @var $ViewType
      * 
      * @return string

@@ -1,30 +1,55 @@
 <!DOCTYPE html>
 <html>
 
+
+
 <head>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo (htmlspecialchars($this->Controller::$PageTitle)); ?></title>
+    <link rel="icon" type="image/x-icon" href="/Assets/Images/krudoFavIco.ico">
+    <?php if(method_exists($this->Controller, "provideHeaderControllerAddition")):?>
+        <?php echo($this->Controller::provideHeaderControllerAddition());?>
+    <?php endif;?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../Assets/CSS/main.css">
     <link rel="stylesheet" type="text/css" href="../Assets/CSS/mainResponsive.css">
+    <link rel="stylesheet" type="text/css" href="../Assets/CSS/fonts.css">
+    <link rel="stylesheet" type="text/css" href="../Assets/CSS/contents.css">
+    <link rel="stylesheet" type="text/css" href="../Assets/CSS/interactive.css">
+    <link rel="stylesheet" type="text/css" href="../Assets/CSS/tables.css">
+    <link rel="stylesheet" type="text/css" href="../Assets/CSS/forms.css">
+    <link rel="stylesheet" type="text/css" href="../Assets/CSS/animations.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
 </head>
+
 
 <body>
 
-    <div id="header-top-block">
 
+    <!-- TOP BLOCK - START -->
+    <div id="header-top-block">
         <?php if (\Model\User::CheckUserActivity()) : ?>
             <div class="header-top-block-controls">
-                <a href="/logout"><span class="header-top-block-controls-item">Logout <span class="material-icons" title="edit record">logout</span></span></a>
+                <a href="/logout" title="logout from Krudo"><span class="header-top-block-controls-item">Logout <span class="material-icons" title="edit record">logout</span></span></a>
+            </div>
+        <?php else: ?>
+            <div id="main-logo">
+                <img src="../Assets/Images/krudoLogo3.png" title="Krudo - Krucial Done"/>
             </div>
         <?php endif; ?>
-
-        <h1>Krudo app</h1>
-        <strong id="header-h1">A nano framework</strong>
-
-
-
     </div>
+    <!-- TOP BLOCK - END -->
+
 
     <!-- Main Content Block - START-->
-    <div id="main-content-block">
+    <?php if (\Model\User::CheckUserActivity()) : ?>
+        <div id="main-content-block">
+    <?php else: ?>
+        <div id="auth-content-block">
+    <?php endif; ?>
+
