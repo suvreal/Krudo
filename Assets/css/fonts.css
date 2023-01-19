@@ -37,3 +37,21 @@
         font-size: 55px;
         text-align: center;
     }
+
+    /* Imported fonts
+    ==========================================================================*/
+
+    @font-face {
+        font-family: "Comfortaa";
+        src: url("../Fonts/Comfortaa/comfortaa-VariableFont_wght.ttf") format("truetype");
+    }
+
+    @font-face {
+        font-family: "Playfair_Display";
+        src: url("../Fonts/Playfair_Display/PlayfairDisplay-VariableFont_wght.ttf") format("truetype");
+    }
+
+    @font-face {
+        font-family: "Yeseva_One";
+        src: url("../Fonts/Yeseva_One/YesevaOne-Regular.ttf") format("truetype");
+    }

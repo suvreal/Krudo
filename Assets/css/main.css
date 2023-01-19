@@ -21,6 +21,10 @@
         transition:all 0.25s ease-in-out;
     }
 
+    h1, h2, h3, h4, h5{
+        font-family:Comfortaa !important;
+    }
+
     #main-logo{
         width: 135px;
         margin: auto;
