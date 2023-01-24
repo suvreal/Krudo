@@ -1,6 +1,6 @@
 <?php
 
-namespace controller;
+namespace Controller;
 
 final Class ProductRemove extends Controller
 {

@@ -9,19 +9,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo (htmlspecialchars($this->Controller::$PageTitle)); ?></title>
-    <link rel="icon" type="image/x-icon" href="/Assets/Images/krudoFavIco.ico">
+    <link rel="icon" type="image/x-icon" href="<?php echo constant("APP_ROOT")?>/Assets/Images/krudoFavIco.ico">
     <?php if(method_exists($this->Controller, "provideHeaderControllerAddition")):?>
         <?php echo($this->Controller::provideHeaderControllerAddition());?>
     <?php endif;?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../Assets/CSS/main.css">
-    <link rel="stylesheet" type="text/css" href="../Assets/CSS/mainResponsive.css">
-    <link rel="stylesheet" type="text/css" href="../Assets/CSS/fonts.css">
-    <link rel="stylesheet" type="text/css" href="../Assets/CSS/contents.css">
-    <link rel="stylesheet" type="text/css" href="../Assets/CSS/interactive.css">
-    <link rel="stylesheet" type="text/css" href="../Assets/CSS/tables.css">
-    <link rel="stylesheet" type="text/css" href="../Assets/CSS/forms.css">
-    <link rel="stylesheet" type="text/css" href="../Assets/CSS/animations.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo constant("APP_ROOT")?>/Assets/CSS/main.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo constant("APP_ROOT")?>/Assets/CSS/mainResponsive.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo constant("APP_ROOT")?>/Assets/CSS/fonts.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo constant("APP_ROOT")?>/Assets/CSS/contents.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo constant("APP_ROOT")?>/Assets/CSS/interactive.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo constant("APP_ROOT")?>/Assets/CSS/tables.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo constant("APP_ROOT")?>/Assets/CSS/forms.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo constant("APP_ROOT")?>/Assets/CSS/animations.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 
@@ -33,13 +33,13 @@
 
     <!-- TOP BLOCK - START -->
     <div id="header-top-block">
-        <?php if (\Model\User::CheckUserActivity()) : ?>
+        <?php if (Model\User::CheckUserActivity()) : ?>
             <div class="header-top-block-controls">
                 <a href="/logout" title="logout from Krudo"><span class="header-top-block-controls-item">Logout <span class="material-icons" title="edit record">logout</span></span></a>
             </div>
         <?php else: ?>
             <div id="main-logo">
-                <img src="../Assets/Images/krudo_animated_42.svg" title="Krudo - Krucial Done"/>
+                <img src="<?php echo constant("APP_ROOT")?>/Assets/Images/krudo_animated_42.svg" title="Krudo - Krucial Done"/>
             </div>
         <?php endif; ?>
     </div>
@@ -47,7 +47,7 @@
 
 
     <!-- Main Content Block - START-->
-    <?php if (\Model\User::CheckUserActivity()) : ?>
+    <?php if (Model\User::CheckUserActivity()) : ?>
         <div id="main-content-block">
     <?php else: ?>
         <div id="auth-content-block">

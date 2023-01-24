@@ -1,19 +1,29 @@
 
 
+<!-- Products preparation - START -->
+<?php $products = $this->Controller->getAllProducts(); ?>
+<!-- Products preparation - END -->
+
+
 <!-- Box headers - START -->
 <h2><span class="material-icons" title="search records">search</span>My products</h2>
 <button type="button" id="add-product" title="add product" onclick="window.location.href='/product';">
         <span class="material-icons" title="add new product">add</span>
         Add product
 </button>
-
 <!-- Box headers - END -->
 
 
+<?php if (is_array($products) && count($products) > 0) : ?>
 <!-- Products search - START -->
-<div id="search-box">
-    <input id="searchInput" type="text" name="searchProducts" class="singleInputs" placeholder="Search in products ..." title="Write at least 3 characters">
-</div>
+    <div id="search-box">
+        <input id="searchInput" type="text" name="searchProducts" class="singleInputs" placeholder="Search in products ..." title="Write at least 3 characters">
+    </div>
+<?php else: ?>
+    <div class="page-content-container">
+        <p class="center">No data available - create record</p>
+    </div>
+<?php endif; ?>
 <!-- Products search - END -->
 
 
@@ -21,16 +31,13 @@
 <div class="content-box">
     <table id="product-data-list" class="data-list">
         <tbody id="data-records">
-            <?php $products = $this->Controller->getAllProducts(); ?>
             <?php if (is_array($products) && count($products) > 0) : ?>
-
                 <tr class="data-list-item main-content-record">
                     <th class="data-list-item-element">Title</th>
                     <th class="data-list-item-element">Discount Price</th>
                     <th class="data-list-item-element">Price</th>
                     <th class="data-list-item-element">Controls</th>
                 </tr>
-
                 <?php foreach ($products as $product) : ?>
                     <tr class="data-list-item products-box main-content-record">
                         <td class="data-list-item-element initial-products"><?php echo htmlspecialchars($product->getAttributeValue("Title")) ?></td>
@@ -42,7 +49,6 @@
                         </td>
                     </tr>
                 <?php endforeach; ?>
-
             <?php endif; ?>
         </tbody>
     </table>

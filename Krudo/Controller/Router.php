@@ -1,6 +1,6 @@
 <?php
 
-namespace controller;
+namespace Controller;
 
 use Exception;
 use Exceptions\RouteControllerException;
@@ -82,12 +82,25 @@ class Router
     {
         if (array_key_exists("PATH_INFO", $_SERVER)) {
             if ($ProcessedURL = explode("/", $_SERVER["PATH_INFO"])[1]) {
-                (new \Controller\Router())->performRoute($ProcessedURL);
+                (new self())->performRoute($ProcessedURL);
             }
         }
         if (!array_key_exists("PATH_INFO", $_SERVER)) {
-            (new \Controller\Router())->performRoute("products");
+            (new self())->performRoute("products");
         }
+    }
+
+    /**
+     * @param string $pathName
+     * @return void
+     * @throws Exception
+     */
+    public function performRoute(string $pathName): void
+    {
+        $this->setRoutes()
+            ->setPathName($pathName)
+            ->setExpectedRequestKeys()
+            ->provideContent($this->getRouteValue($this->PathName));
     }
 
     /**
@@ -100,34 +113,32 @@ class Router
     }
 
     /**
-     * @param string $pathName
-     * @return void
-     * @throws Exception
+     * A getter for Routes property
+     *
+     * @return array
      */
-    public function performRoute(string $pathName): void
+    public function getRoutes(): array
     {
-        $this->getRoutes();
-        $this->setPathName($pathName);
-        $this->setExpectedRequestKeys();
-        $this->provideContent($this->getRouteValue($this->PathName));
+        return $this->Routes;
     }
 
     // TODO: add exception
     /**
-     * Obtains routes configuration
+     * Sets routes configuration
+     *
      * Getter for @property $Routes
      */
-    public function getRoutes()
+    public function setRoutes(): Router
     {
-        if (!file_exists("routesConfiguration.php")) {
+        if (!file_exists(constant("APP_ROOT_MAIN")."/routesConfiguration.php")) {
             exit(<<<EOT
             Routes configuration file is not existing
             <br/>
             - please create routesConfiguration.php file in root of Krudo folder and fill it by Routes example in README.MD
             EOT);
         }
-
-        $this->Routes = include("./routesConfiguration.php");
+        $this->Routes = include(constant("APP_ROOT_MAIN")."/routesConfiguration.php");
+        return $this;
     }
 
     /**
@@ -195,11 +206,25 @@ class Router
     }
 
     /**
+     * Obtains all request keys according to POST and GET values
+     *
+     * @param string $pathName
+     * @return Router|null
+     */
+    public function setPathName(string $pathName): ?Router
+    {
+        if($this->PathName = $pathName){
+            return $this;
+        }
+        return null;
+    }
+
+    /**
      * Obtains allowed request keys according to POST and GET values
      * 
-     * @return array @property $ExpectedRequestKeys
+     * @return Router
      */
-    public function setExpectedRequestKeys(): ?array
+    public function setExpectedRequestKeys(): Router
     {
         $returnArray = array(
             "GET" => array(),
@@ -224,19 +249,8 @@ class Router
             }
         }
 
-        return $this->ExpectedRequestKeys = $returnArray;
-    }
-
-
-    /**
-     * Obtains all request keys according to POST and GET values
-     * 
-     * @param string $pathName
-     * @return string
-     */
-    public function setPathName(string $pathName): ?string
-    {
-        return $this->PathName = $pathName;
+        $this->ExpectedRequestKeys = $returnArray;
+        return $this;
     }
 
     /**
@@ -250,17 +264,16 @@ class Router
     {
         if (array_key_exists($pathName, $this->Routes)) {
             try {
-                if (class_exists("\\" . self::$MainFolderPathNames["controller"] . "\\" . $this->Routes[$pathName]["routerClass"])) {
+                if (class_exists(self::$MainFolderPathNames["controller"] . "\\" . $this->Routes[$pathName]["routerClass"])) {
                     return $this->Routes[$pathName]["routerClass"];
                 } else {
-                    throw new RouteControllerException();
+                    throw new RouteControllerException("Controller not found");
                 }
             }catch(RouteControllerException $e){
                 echo("Message: ". $e->errorMessage($this->Routes[$pathName]["routerClass"]));
             }
         }
         return $this->Routes["404"]["routerClass"];
-
     }
 
     /**
@@ -288,9 +301,9 @@ class Router
     public function provideContent(string $controllerClassName)
     {
         // Prepare folders to check Controller and Model classes with Views
-        $controllerClass = "\\" . self::$MainFolderPathNames["controller"] . "\\" . $controllerClassName;
-        $modelControllerClass = "\\" . self::$MainFolderPathNames["model"] . "\\" . $controllerClassName;
-        $viewTemplate = self::$MainFolderPathNames["view"] . "\\" . $controllerClassName . ".phtml";
+        $controllerClass = self::$MainFolderPathNames["controller"] . "\\" . $controllerClassName;
+        $modelControllerClass = self::$MainFolderPathNames["model"] . "\\" . $controllerClassName;
+        $viewTemplate = constant("APP_ROOT_MAIN")."\\".self::$MainFolderPathNames["view"] . "\\" . $controllerClassName . ".phtml";
 
         // Get possible model for particular controller
         // Check if current Controller name exists in Model folder to provide common data
@@ -312,7 +325,7 @@ class Router
 
         // Complete whole return page of all additions
         // Provide constant header for provided content Controller
-        require(self::$ViewParts["Header"]);
+        require(constant("APP_ROOT_MAIN")."\\".self::$ViewParts["Header"]);
         // Check which ViewType settings current Controller has - showing template
         if ($controllerClass::$ViewType == "template") {
             require($viewTemplate);
@@ -322,7 +335,7 @@ class Router
             echo $this->Controller->controllerView();
         }
         // Provide constant header for provided content Controller
-        require(self::$ViewParts["Footer"]);
+        require(constant("APP_ROOT_MAIN")."\\".self::$ViewParts["Footer"]);
     }
 
 }

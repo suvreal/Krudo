@@ -9,8 +9,9 @@ Use Exception;
  */
 class AppConfigurationException extends Exception
 {
+
     /**
-     * Returns app configuration erro message
+     * Returns app configuration error message
      *
      * @return string
      */
@@ -19,7 +20,7 @@ class AppConfigurationException extends Exception
         exit(<<<EOT
         File app configuration is not existing
         <br/>
-        - please create appConfiguration.php file in root of Krudo folder according to fourth step in README.md
+        - please create appConfiguration.php file in project root folder according to fourth step in README.md
         EOT);
     }
 

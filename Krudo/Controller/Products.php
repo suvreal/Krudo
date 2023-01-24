@@ -1,6 +1,6 @@
 <?php
 
-namespace controller;
+namespace Controller;
 
 /**
  * Controller class which is result of undefined route by URL path name

@@ -55,7 +55,7 @@ class Model
             array($id)
         );
 
-        if(!is_null($record) && $record[0]->getId() > 0) {
+        if (!is_null($record) && $record[0]->getId() > 0) {
             return true;
         }
 
@@ -212,7 +212,7 @@ class Model
         string $queryTail = "",
         string $whereQuery = "",
         string $bindTypes = null,
-        array $bindValues = array()
+        array  $bindValues = array()
     ): ?array
     {
 
@@ -343,10 +343,10 @@ class Model
 
     /**
      * Set attribute property keys for created model object
-     * Sets Model @property $ModelData
-     *
-     * @param array $attributeDataToSave
+     * Sets Model @param array $attributeDataToSave
      * @return void
+     * @property $ModelData
+     *
      */
     public function setAttributeValues(array $attributeDataToSave): void
     {
@@ -362,11 +362,11 @@ class Model
 
     /**
      * Set attribute property keys for created model object
-     * Sets Model @property $ModelData by @param $attributeValue
-     *
-     * @param string $attributeKey
+     * Sets Model @param string $attributeKey
      * @param string $attributeValue
      * @return void
+     * @property $ModelData by @param $attributeValue
+     *
      */
     public function setAttributeValue(string $attributeKey, string $attributeValue): void
     {
@@ -398,30 +398,30 @@ class Model
      */
     public function SaveRecord(): ?mysqli_stmt
     {
-        $data = (array) $this->getAttributeValues();
+        $data = (array)$this->getAttributeValues();
         $newRecord = null;
         $queryPrefix = "";
-        if($this->getId() == 0){
+        if ($this->getId() == 0) {
             unset($data["ID"]);
             $newRecord = true;
             $queryPrefix = "INSERT INTO";
         }
-        if($this->getId() > 0){
+        if ($this->getId() > 0) {
             $queryPrefix = "REPLACE INTO";
         }
 
         $arrayKeys = implode(",", array_keys($data));
-        if (is_null($bindCharacters = rtrim(str_repeat("?,",count($data)), ","))) { //
+        if (is_null($bindCharacters = rtrim(str_repeat("?,", count($data)), ","))) { //
             return false;
         }
-        if(is_null($bindParams = self::getModelBindParams())){
+        if (is_null($bindParams = self::getModelBindParams())) {
             return false;
         }
-        if(is_null($table = self::getModelTableName())){
+        if (is_null($table = self::getModelTableName())) {
             return false;
         }
-        if($this->getId() > 0){
-            $bindParams = "i".$bindParams;
+        if ($this->getId() > 0) {
+            $bindParams = "i" . $bindParams;
         }
 
 
@@ -429,7 +429,7 @@ class Model
         $connectionStatement->bind_param($bindParams, ...array_values($data));
 
         $connectionStatement->execute();
-        if($newRecord){
+        if ($newRecord) {
             $this->setId($connectionStatement->insert_id);
             $this::$Instances[$connectionStatement->insert_id] = $this;
         }
@@ -445,7 +445,7 @@ class Model
     public function DeleteRecord(): bool
     {
 
-        if(!($ID = $this->getId()) || $ID <= 0){
+        if (!($ID = $this->getId()) || $ID <= 0) {
             return false;
         }
 
@@ -457,7 +457,7 @@ class Model
         $statement = $connection->prepare("DELETE FROM $table WHERE ID = ?");
         $statement->bind_param('i', $ID);
         $statement->execute();
-        if(!$statement->get_result()){
+        if (!$statement->get_result()) {
             return true;
         }
         return false;

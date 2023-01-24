@@ -1,6 +1,6 @@
 <?php
 
-namespace controller;
+namespace Controller;
 
 /**
  * Controller class which is supposed to log off user

@@ -1,8 +1,8 @@
 # Krudo
 A basic pure OOP PHP MVP nano framework application for product management.
-- PHP 8
+- PHP 8.1.x
 - Made with fun and love
-- dev version 0.4
+- dev version 0.5
 - feedback appreciated
 - development but functional version
 
@@ -19,15 +19,14 @@ A basic pure OOP PHP MVP nano framework application for product management.
 4. Create and set file appConfiguration.php (where the index.php is) to name app constants correctly for routing and MySQL DB connection:
     ```
     <?php
-    const APP_ROOT = "/KRUDO";
+    const APP_ROOT = "/Krudo";
     
     const APP_DB_NAME = "krudo";
-    const APP_DB_USER = "root";
-    const APP_DB_PASSWORD = "123321";
+    const APP_DB_USER = "admin";
+    const APP_DB_PASSWORD = "password";
     const APP_DB_PORT = "3309";
     const APP_DB_ADDRESS = "127.0.0.1";
     ```
-
 5. Import database structure from provided file: krudo_sql_structure.sql
 6. Run application in PHP webserver. For example as below in root of application:
     ```
@@ -35,6 +34,67 @@ A basic pure OOP PHP MVP nano framework application for product management.
     ``` 
 7. App is implemented and provied on desired path, for example: localhost:8000
 8. Default user is provided to login
+
+## Tests installation:
+1. In root prepare vendor using (PHPUnit 8.3.0 for PHP 8):
+   ```
+   composer require --dev phpunit/phpunit ^9.3.0
+   ```
+2. Test installed version of PHPUnit:
+    ```
+   ./vendor/bin/phpunit --version
+   ```
+3. Run autoload dump to prepare loading of tests to Krudo:
+    ```
+    composer dump-autoload
+    ```
+4. Run tests prepared for Krudo:
+   ```
+   ./vendor/bin/phpunit KrudoTest
+   ```
+
+## Tests implementation:
+- set app source composer.json:
+   ```
+     {
+        "require-dev": {
+         "phpunit/phpunit": "9.3.0"
+        },
+        "autoload": {
+           "classmap": [
+            "Krudo/"
+           ]
+        }
+     }
+   ```
+- set tests source in phpunit.xml (example):
+   ```
+   <?xml version="1.0" encoding="UTF-8"?>
+   <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+   bootstrap="vendor/autoload.php"
+   executionOrder="depends,defects"
+   forceCoversAnnotation="true"
+   beStrictAboutCoversAnnotation="true"
+   beStrictAboutOutputDuringTests="true"
+   beStrictAboutTodoAnnotatedTests="true"
+   failOnRisky="true"
+   failOnWarning="true"
+   verbose="true"
+   colors="true">
+   <testsuites>
+   <testsuite name="Krudo">
+   <directory suffix="Test.php">KrudoTest</directory>
+   </testsuite>
+   </testsuites>
+   
+       <coverage processUncoveredFiles="true">
+           <include>
+               <directory suffix=".php">src</directory>
+           </include>
+       </coverage>
+   </phpunit>
+   ```
 
 ## Usage:
 Generally there is important to clone and paste root of app into adequate folder, import database and run webserver for this app. More steps below.
