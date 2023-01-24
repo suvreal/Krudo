@@ -68,7 +68,7 @@ A basic pure OOP PHP MVP nano framework application for product management.
         }
      }
    ```
-- set tests source in phpunit.xml (example):
+- set tests source in vendor/sebastian/object-enumerator/phpunit.xml (example):
    ```
    <?xml version="1.0" encoding="UTF-8"?>
    <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
