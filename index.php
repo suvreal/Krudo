@@ -2,11 +2,10 @@
 
 
 /**
-  * Imports & sets
+ * Imports & sets
  */
 declare(strict_types=1);
 use Controller\Router;
-use Exceptions\AppConfigurationException;
 
 
 /**
@@ -26,10 +25,15 @@ try {
     if (file_exists("appConfiguration.php")) {
         require("appConfiguration.php");
     }else{
-        throw new AppConfigurationException();
+        throw new Exception(<<<EOT
+        File app configuration is not existing
+        <br/>
+        - please create appConfiguration.php file in project root folder according to fourth step in README.md
+        <br/>
+        EOT);
     }
-}catch(AppConfigurationException $e){
-    echo("Message " .$e->errorMessage());
+}catch(Exception $e){
+    echo("Message " .$e->getMessage());
 }
 
 
